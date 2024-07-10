@@ -74,3 +74,30 @@ variable "extra_manifests" {
   type    = list(string)
   default = []
 }
+
+# ARGOCD
+
+variable "gitops_addons_org" {
+  type = string
+  default = "https://github.com/jamesatintegratnio"
+}
+
+variable "gitops_addons_repo" {
+  type = string
+  default = "gitops-bridge-argocd-control-plane"
+}
+
+variable "gitops_addons_basepath" {
+  type = string
+  default = ""
+}
+
+variable "gitops_addons_path" {
+  type = string
+  default = "bootstrap/control-plane/addons"
+}
+
+variable "gitops_addons_revision" {
+  type = string
+  default = "homelab"
+}
