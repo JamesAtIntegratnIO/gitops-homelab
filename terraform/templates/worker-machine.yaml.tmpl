@@ -1,0 +1,24 @@
+machine:
+  certSANs: 
+%{ for cert_san in cert_sans ~}
+    - ${cert_san}
+%{ endfor ~}
+  network: 
+    hostname: ${hostname}
+    interfaces:
+      - deviceSelector:
+          physical: true
+        addresses:
+          - ${ip_address}/${cidr}
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${gateway}
+    nameservers: 
+%{ for nameserver in nameservers ~}
+      - ${nameserver}
+%{ endfor ~}
+  install:
+    disk: ${disk}
+  kubelet:
+    extraArgs:
+      rotate-server-certificates: true

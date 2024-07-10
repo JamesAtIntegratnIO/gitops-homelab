@@ -1,0 +1,2 @@
+static IPs are really hard with talos on first boot. 
+cheat and set a static IP in your dhcp server with some reserved macs that you will apply to your nodes. Generate unicast macs here: https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast 
