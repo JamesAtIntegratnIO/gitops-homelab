@@ -47,12 +47,10 @@ No modules.
 | <a name="input_ip_base"></a> [ip\_base](#input\_ip\_base) | n/a | `string` | n/a | yes |
 | <a name="input_nameservers"></a> [nameservers](#input\_nameservers) | n/a | `list(string)` | `[]` | no |
 | <a name="input_nodes"></a> [nodes](#input\_nodes) | n/a | <pre>map(object({<br>    name             = string<br>    cpu_sockets      = number<br>    cpu_cores        = number<br>    memory           = number<br>    target_node_name = string<br>    disk_size        = string<br>    macaddr          = string<br><br>    controlplane = optional(bool, false)<br>  }))</pre> | n/a | yes |
-| <a name="input_proxmox_image"></a> [proxmox\_image](#input\_proxmox\_image) | ################################################## \_\_\_\_\_\_\_\_\_\_\_\_ \_\_\_\_\_\_\_   \_\_\_\_\_  \_\_\_\_\_\_\_\_\_\_   \_\_  # \| \_\_\_ \ \_\_\_ \  \_  \ \ / /\|  \/  \|  \_  \ \ / /  # \| \|\_/ / \|\_/ / \| \| \|\ V / \| .  . \| \| \| \|\ V /   # \|  \_\_/\|    /\| \| \| \|/   \ \| \|\/\| \| \| \| \|/   \   # \| \|   \| \|\ \\ \\_/ / /^\ \\| \|  \| \ \\_/ / /^\ \  # \\_\|   \\_\| \\_\|\\_\_\_/\/   \/\\_\|  \|\_/\\_\_\_/\/   \/  # # ################################################## | `string` | `"local:iso/talos-metal-qemu-1.7.5.iso"` | no |
+| <a name="input_proxmox_image"></a> [proxmox\_image](#input\_proxmox\_image) | n/a | `string` | `"local:iso/talos-metal-qemu-1.7.5.iso"` | no |
 | <a name="input_proxmox_storage"></a> [proxmox\_storage](#input\_proxmox\_storage) | n/a | `string` | `"local-zfs"` | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_vm_ipv4_addresses"></a> [vm\_ipv4\_addresses](#output\_vm\_ipv4\_addresses) | n/a |
+No outputs.
 <!-- END_TF_DOCS -->

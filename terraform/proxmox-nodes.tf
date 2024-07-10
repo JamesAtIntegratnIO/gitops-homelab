@@ -68,7 +68,3 @@ resource "proxmox_vm_qemu" "nodes" {
     ]
   }
 }
-
-output "vm_ipv4_addresses" {
-  value = { for k, v in proxmox_vm_qemu.nodes : k => v.default_ipv4_address }
-}

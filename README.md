@@ -124,6 +124,3 @@ This Terraform project simplifies the process of deploying and managing a Talos 
 
 ## Notes that need sorted
 static IPs are really hard with talos on first boot. cheat and set a static IP in your dhcp server with some reserved macs that you will apply to your nodes. Generate unicast macs here: https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast 
-
-<!-- BEGIN_TF_DOCS -->
-<!-- END_TF_DOCS -->   
