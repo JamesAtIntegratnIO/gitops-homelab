@@ -69,3 +69,8 @@ variable "install_disk" {
   type    = string
   default = "/dev/sda"
 }
+
+variable "extra_manifests" {
+  type    = list(string)
+  default = []
+}

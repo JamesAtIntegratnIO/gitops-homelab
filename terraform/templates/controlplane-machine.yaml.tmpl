@@ -24,3 +24,8 @@ machine:
   kubelet:
     extraArgs:
       rotate-server-certificates: true
+cluster:
+  extraManifests:
+%{ for manifest in extra_manifests ~}
+    - ${manifest}
+%{ endfor ~}

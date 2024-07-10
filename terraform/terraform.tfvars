@@ -68,3 +68,8 @@ proxmox_image   = "local:iso/talos-metal-qemu-1.7.5.iso"
 proxmox_storage = "local-zfs"
 
 cluster_name = "get-rekt-talos"
+
+extra_manifests = [
+  "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
+  "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+]

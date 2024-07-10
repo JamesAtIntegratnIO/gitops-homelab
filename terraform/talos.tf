@@ -38,6 +38,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       gateway     = var.gateway
       nameservers = var.nameservers
       disk        = var.install_disk
+      extra_manifests = var.extra_manifests
     }),
   ]
 
