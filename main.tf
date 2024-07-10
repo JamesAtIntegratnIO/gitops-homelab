@@ -30,6 +30,11 @@ locals  {
   )
 }
 
+resource "time_sleep" "wait_for_cluster" {
+  depends_on = [module.cluster]
+  create_duration = "7m"
+}
+
 module "argocd" {
   source = "git@github.com:jamesAtIntegratnIO/terraform-helm-gitops-bridge?ref=homelab"
 
@@ -48,5 +53,5 @@ module "argocd" {
     addons = file("${path.module}/bootstrap/addons.yaml")
     }
 
-  depends_on = [ module.cluster ]
+  depends_on = [ time_sleep.wait_for_cluster ]
 }
