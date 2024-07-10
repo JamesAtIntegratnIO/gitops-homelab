@@ -30,3 +30,4 @@ terraform.rc
 talosconfig
 kubeconfig
 secrets.env
+dockerconfig.json

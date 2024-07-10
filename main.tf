@@ -26,6 +26,9 @@ locals  {
       addons_repo_basepath = local.gitops_addons_basepath
       addons_repo_path     = local.gitops_addons_path
       addons_repo_revision = local.gitops_addons_revision
+    },
+    {
+      external_dns_namespace = "external-dns"
     }
   )
 }
@@ -49,6 +52,8 @@ module "argocd" {
       enable_argocd = true
       enable_ingress_nginx = true
       enable_metallb = true
+      enable_op_connect = true
+      enable_external_dns = true
     }
   }
   apps = {
@@ -56,4 +61,51 @@ module "argocd" {
     }
 
   depends_on = [ time_sleep.wait_for_cluster ]
+}
+
+resource "kubernetes_namespace" "op_connect" {
+  metadata {
+    annotations = {
+      name = "op-connect"
+    }
+    name = "op-connect"
+  }
+  depends_on = [ time_sleep.wait_for_cluster ]
+}
+
+resource "kubernetes_secret" "op_credentials" {
+  metadata {
+    name = "op-credentials"
+    namespace = kubernetes_namespace.op_connect.metadata.0.name
+  }
+  data = {
+    "1password-credentials.json" = var.onepassword_credentials
+  }
+  depends_on = [ kubernetes_namespace.op_connect ]
+}
+
+resource "kubernetes_secret" "onepassword_token" {
+  metadata {
+    name = "onepassword-token"
+    namespace = kubernetes_namespace.op_connect.metadata.0.name
+  }
+  data = {
+    token = var.onepassword_token
+  }
+  depends_on = [ kubernetes_namespace.op_connect ]
+}
+
+resource "kubernetes_secret" "docker-config" {
+  metadata {
+    name = "ghcr-login-secret"
+    namespace = "argocd"
+  }
+
+  data = {
+    ".dockerconfigjson" = "${file("${path.module}/dockerconfig.json")}"
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  depends_on = [ module.argocd ]
 }
