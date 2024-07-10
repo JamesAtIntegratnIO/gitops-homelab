@@ -130,22 +130,29 @@ static IPs are really hard with talos on first boot. cheat and set a static IP i
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.10.1 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.31.0 |
 | <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 3.0.1-rc3 |
 | <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.5.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_time"></a> [time](#provider\_time) | 0.11.2 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_argocd"></a> [argocd](#module\_argocd) | git@github.com:jamesAtIntegratnIO/terraform-helm-gitops-bridge | homelab |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [time_sleep.wait_for_cluster](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 
 ## Inputs
 
@@ -156,6 +163,11 @@ No resources.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
 | <a name="input_extra_manifests"></a> [extra\_manifests](#input\_extra\_manifests) | n/a | `list(string)` | `[]` | no |
 | <a name="input_gateway"></a> [gateway](#input\_gateway) | n/a | `string` | n/a | yes |
+| <a name="input_gitops_addons_basepath"></a> [gitops\_addons\_basepath](#input\_gitops\_addons\_basepath) | n/a | `string` | `""` | no |
+| <a name="input_gitops_addons_org"></a> [gitops\_addons\_org](#input\_gitops\_addons\_org) | n/a | `string` | `"https://github.com/jamesatintegratnio"` | no |
+| <a name="input_gitops_addons_path"></a> [gitops\_addons\_path](#input\_gitops\_addons\_path) | n/a | `string` | `"bootstrap/control-plane/addons"` | no |
+| <a name="input_gitops_addons_repo"></a> [gitops\_addons\_repo](#input\_gitops\_addons\_repo) | n/a | `string` | `"gitops-bridge-argocd-control-plane"` | no |
+| <a name="input_gitops_addons_revision"></a> [gitops\_addons\_revision](#input\_gitops\_addons\_revision) | n/a | `string` | `"homelab"` | no |
 | <a name="input_install_disk"></a> [install\_disk](#input\_install\_disk) | n/a | `string` | `"/dev/sda"` | no |
 | <a name="input_ip_base"></a> [ip\_base](#input\_ip\_base) | n/a | `string` | n/a | yes |
 | <a name="input_nameservers"></a> [nameservers](#input\_nameservers) | n/a | `list(string)` | `[]` | no |
