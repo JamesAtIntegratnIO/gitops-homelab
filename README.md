@@ -79,13 +79,6 @@ provider "proxmox" {
 }
 ```
 
-
-Before applying the Terraform configuration, ensure you have configured the necessary variables in your `terraform.tfvars` file or equivalent. Key variables include:
-
-- `nameservers`: Specifies the DNS servers for the VMs.
-- [`install_disk`](command:_github.copilot.openSymbolFromReferences?%5B%7B%22%24mid%22%3A1%2C%22path%22%3A%22%2Fhome%2Fboboysdadda%2Fprojects%2Fgitops-homelab%2Fterraform%2Fvariables.tf%22%2C%22scheme%22%3A%22file%22%7D%2C%7B%22line%22%3A67%2C%22character%22%3A0%7D%5D "terraform/variables.tf"): Defines the disk where Talos OS will be installed.
-- [`nodes`](command:_github.copilot.openSymbolFromReferences?%5B%7B%22%24mid%22%3A1%2C%22path%22%3A%22%2Fhome%2Fboboysdadda%2Fprojects%2Fgitops-homelab%2Fterraform%2Fproxmox-nodes.tf%22%2C%22scheme%22%3A%22file%22%7D%2C%7B%22line%22%3A0%2C%22character%22%3A0%7D%5D "terraform/proxmox-nodes.tf"): A map defining the node names and roles within the cluster.
-
 ## Usage
 
 1. **Initialize Terraform**
@@ -131,3 +124,6 @@ This Terraform project simplifies the process of deploying and managing a Talos 
 
 ## Notes that need sorted
 static IPs are really hard with talos on first boot. cheat and set a static IP in your dhcp server with some reserved macs that you will apply to your nodes. Generate unicast macs here: https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast 
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->   
