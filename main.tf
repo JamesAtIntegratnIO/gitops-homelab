@@ -30,7 +30,9 @@ locals  {
   )
 }
 
+# add --var skip_cluster_wait=true to skip the wait if the cluster is already up
 resource "time_sleep" "wait_for_cluster" {
+  count = var.skip_cluster_wait ? 0 : 1
   depends_on = [module.cluster]
   create_duration = "7m"
 }

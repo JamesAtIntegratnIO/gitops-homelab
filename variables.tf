@@ -101,3 +101,8 @@ variable "gitops_addons_revision" {
   type = string
   default = "homelab"
 }
+
+variable "skip_cluster_wait" {
+  type    = bool
+  default = false
+}
