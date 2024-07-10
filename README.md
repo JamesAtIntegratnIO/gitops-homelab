@@ -124,3 +124,46 @@ This Terraform project simplifies the process of deploying and managing a Talos 
 
 ## Notes that need sorted
 static IPs are really hard with talos on first boot. cheat and set a static IP in your dhcp server with some reserved macs that you will apply to your nodes. Generate unicast macs here: https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast 
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 3.0.1-rc3 |
+| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.5.0 |
+
+## Providers
+
+No providers.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
+
+## Resources
+
+No resources.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_cidr"></a> [cidr](#input\_cidr) | n/a | `number` | n/a | yes |
+| <a name="input_cluster_endpoint_ip"></a> [cluster\_endpoint\_ip](#input\_cluster\_endpoint\_ip) | n/a | `string` | n/a | yes |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
+| <a name="input_extra_manifests"></a> [extra\_manifests](#input\_extra\_manifests) | n/a | `list(string)` | `[]` | no |
+| <a name="input_gateway"></a> [gateway](#input\_gateway) | n/a | `string` | n/a | yes |
+| <a name="input_install_disk"></a> [install\_disk](#input\_install\_disk) | n/a | `string` | `"/dev/sda"` | no |
+| <a name="input_ip_base"></a> [ip\_base](#input\_ip\_base) | n/a | `string` | n/a | yes |
+| <a name="input_nameservers"></a> [nameservers](#input\_nameservers) | n/a | `list(string)` | `[]` | no |
+| <a name="input_nodes"></a> [nodes](#input\_nodes) | n/a | <pre>map(object({<br>    name             = string<br>    cpu_sockets      = number<br>    cpu_cores        = number<br>    memory           = number<br>    target_node_name = string<br>    disk_size        = string<br>    macaddr          = string<br><br>    controlplane = optional(bool, false)<br>  }))</pre> | n/a | yes |
+| <a name="input_proxmox_image"></a> [proxmox\_image](#input\_proxmox\_image) | n/a | `string` | `"local:iso/talos-metal-qemu-1.7.5.iso"` | no |
+| <a name="input_proxmox_storage"></a> [proxmox\_storage](#input\_proxmox\_storage) | n/a | `string` | `"local-zfs"` | no |
+
+## Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->

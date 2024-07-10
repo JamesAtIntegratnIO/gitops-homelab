@@ -75,7 +75,7 @@ resource "talos_machine_bootstrap" "this" {
 
 resource "local_file" "talosconfig" {
   content  = data.talos_client_configuration.this.talos_config
-  filename = "${path.module}/talosconfig"
+  filename = "${path.root}/talosconfig"
 }
 
 data "talos_cluster_kubeconfig" "this" {
@@ -89,5 +89,5 @@ data "talos_cluster_kubeconfig" "this" {
 
 resource "local_file" "kubeconfig" {
   content  = data.talos_cluster_kubeconfig.this.kubeconfig_raw
-  filename = "${path.module}/kubeconfig"
+  filename = "${path.root}/kubeconfig"
 }

@@ -10,9 +10,3 @@ terraform {
     }
   }
 }
-
-provider "proxmox" {
-  pm_api_url = "https://10.0.0.9:8006/api2/json"
-}
-
-provider "talos" {}

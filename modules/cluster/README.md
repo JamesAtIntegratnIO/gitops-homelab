@@ -10,7 +10,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_local"></a> [local](#provider\_local) | 2.5.1 |
+| <a name="provider_local"></a> [local](#provider\_local) | n/a |
 | <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 3.0.1-rc3 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | 0.5.0 |
 
@@ -52,5 +52,8 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | n/a |
+| <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | n/a |
 <!-- END_TF_DOCS -->
