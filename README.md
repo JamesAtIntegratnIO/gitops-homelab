@@ -130,6 +130,7 @@ static IPs are really hard with talos on first boot. cheat and set a static IP i
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | 4.37.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.10.1 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.31.0 |
 | <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 3.0.1-rc3 |
@@ -139,6 +140,7 @@ static IPs are really hard with talos on first boot. cheat and set a static IP i
 
 | Name | Version |
 |------|---------|
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.31.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.11.2 |
 
 ## Modules
@@ -146,12 +148,17 @@ static IPs are really hard with talos on first boot. cheat and set a static IP i
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_argocd"></a> [argocd](#module\_argocd) | git@github.com:jamesAtIntegratnIO/terraform-helm-gitops-bridge | homelab |
+| <a name="module_cloudflare"></a> [cloudflare](#module\_cloudflare) | ./modules/cloudflare | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [kubernetes_namespace.op_connect](https://registry.terraform.io/providers/hashicorp/kubernetes/2.31.0/docs/resources/namespace) | resource |
+| [kubernetes_secret.docker-config](https://registry.terraform.io/providers/hashicorp/kubernetes/2.31.0/docs/resources/secret) | resource |
+| [kubernetes_secret.onepassword_token](https://registry.terraform.io/providers/hashicorp/kubernetes/2.31.0/docs/resources/secret) | resource |
+| [kubernetes_secret.op_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/2.31.0/docs/resources/secret) | resource |
 | [time_sleep.wait_for_cluster](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 
 ## Inputs
@@ -159,6 +166,9 @@ static IPs are really hard with talos on first boot. cheat and set a static IP i
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cidr"></a> [cidr](#input\_cidr) | n/a | `number` | n/a | yes |
+| <a name="input_cloudflare_api_key"></a> [cloudflare\_api\_key](#input\_cloudflare\_api\_key) | n/a | `string` | n/a | yes |
+| <a name="input_cloudflare_records"></a> [cloudflare\_records](#input\_cloudflare\_records) | n/a | <pre>map(object({<br>    name    = string<br>    value   = string<br>    type    = string<br>    ttl     = number<br>    proxied = bool<br>  }))</pre> | n/a | yes |
+| <a name="input_cloudflare_zone_name"></a> [cloudflare\_zone\_name](#input\_cloudflare\_zone\_name) | n/a | `string` | n/a | yes |
 | <a name="input_cluster_endpoint_ip"></a> [cluster\_endpoint\_ip](#input\_cluster\_endpoint\_ip) | n/a | `string` | n/a | yes |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
 | <a name="input_extra_manifests"></a> [extra\_manifests](#input\_extra\_manifests) | n/a | `list(string)` | `[]` | no |
@@ -172,8 +182,11 @@ static IPs are really hard with talos on first boot. cheat and set a static IP i
 | <a name="input_ip_base"></a> [ip\_base](#input\_ip\_base) | n/a | `string` | n/a | yes |
 | <a name="input_nameservers"></a> [nameservers](#input\_nameservers) | n/a | `list(string)` | `[]` | no |
 | <a name="input_nodes"></a> [nodes](#input\_nodes) | n/a | <pre>map(object({<br>    name             = string<br>    cpu_sockets      = number<br>    cpu_cores        = number<br>    memory           = number<br>    target_node_name = string<br>    disk_size        = string<br>    macaddr          = string<br><br>    controlplane = optional(bool, false)<br>  }))</pre> | n/a | yes |
+| <a name="input_onepassword_credentials"></a> [onepassword\_credentials](#input\_onepassword\_credentials) | n/a | `string` | n/a | yes |
+| <a name="input_onepassword_token"></a> [onepassword\_token](#input\_onepassword\_token) | n/a | `string` | n/a | yes |
 | <a name="input_proxmox_image"></a> [proxmox\_image](#input\_proxmox\_image) | n/a | `string` | `"local:iso/talos-metal-qemu-1.7.5.iso"` | no |
 | <a name="input_proxmox_storage"></a> [proxmox\_storage](#input\_proxmox\_storage) | n/a | `string` | `"local-zfs"` | no |
+| <a name="input_skip_cluster_wait"></a> [skip\_cluster\_wait](#input\_skip\_cluster\_wait) | n/a | `bool` | `false` | no |
 
 ## Outputs
 

@@ -16,11 +16,16 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.10.1"
     }
+    cloudflare = {
+      source = "cloudflare/cloudflare"
+      version = "4.37.0"
+    }
   }
 }
 
 provider "proxmox" {
   pm_api_url = "https://10.0.0.9:8006/api2/json"
+  # set PM_USER and PM_PASS in your environment
 }
 
 provider "talos" {}
@@ -35,4 +40,8 @@ provider "helm" {
     config_path = "./kubeconfig"
     config_context = join("@", ["admin", var.cluster_name])
   }
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_key
 }

@@ -14,6 +14,13 @@ module "cluster" {
   
 }
 
+module "cloudflare" {
+  source = "./modules/cloudflare"
+  
+  cloudflare_zone_name = var.cloudflare_zone_name
+  cloudflare_records = var.cloudflare_records
+}
+
 locals  {
   gitops_addons_url = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
   gitops_addons_basepath = var.gitops_addons_basepath

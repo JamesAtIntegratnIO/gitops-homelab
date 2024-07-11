@@ -116,3 +116,24 @@ variable "onepassword_token" {
   type = string
   sensitive = true
 }
+
+# cloudflare
+
+variable "cloudflare_api_key" {
+  type = string
+  sensitive = true
+}
+
+variable "cloudflare_zone_name" {
+  type = string
+}
+
+variable "cloudflare_records" {
+  type = map(object({
+    name    = string
+    value   = string
+    type    = string
+    ttl     = number
+    proxied = bool
+  }))
+}

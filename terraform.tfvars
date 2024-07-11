@@ -73,3 +73,22 @@ extra_manifests = [
   "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
   "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
 ]
+
+cloudflare_zone_name = "integratn.tech"
+
+cloudflare_records = {
+  "controlplane" = {
+    name    = "controlplane.k8s.integratn.tech"
+    value   = "10.0.4.200"
+    type    = "A"
+    ttl     = 1
+    proxied = false
+  }
+  "start.controlplane" = {
+    name    = "*.controlplane.k8s.integratn.tech"
+    value   = "10.0.4.200"
+    type    = "A"
+    ttl     = 1
+    proxied = false
+  }
+}
