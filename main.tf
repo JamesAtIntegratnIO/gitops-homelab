@@ -29,6 +29,7 @@ locals  {
     },
     {
       external_dns_namespace = "external-dns"
+      cert_manager_namespace = "cert-manager"
     }
   )
 }
@@ -54,6 +55,7 @@ module "argocd" {
       enable_metallb = true
       enable_op_connect = true
       enable_external_dns = true
+      enable_cert_manager = true
     }
   }
   apps = {
