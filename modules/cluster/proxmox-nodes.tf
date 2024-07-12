@@ -1,5 +1,5 @@
 resource "proxmox_vm_qemu" "nodes" {
-  for_each    = { for idx, node in var.nodes : idx => node }
+  for_each    = { for idx, node in var.nodes : idx => node if node.create_vm == true }
   name        = each.value.name
   target_node = each.value.target_node_name
 
@@ -32,7 +32,7 @@ resource "proxmox_vm_qemu" "nodes" {
     model    = "virtio"
     bridge   = "vmbr0"
     firewall = false
-    macaddr = each.value.macaddr
+    macaddr  = each.value.macaddr
   }
 
   boot = "order=scsi0;ide2;net0"

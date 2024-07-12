@@ -62,7 +62,7 @@ ip_base             = "10.0.4.0"
 cidr                = 9
 gateway             = "10.0.0.1"
 cluster_endpoint_ip = "10.0.4.100"
-nameservers = [ "192.168.16.53", "10.0.0.1" ]
+nameservers         = ["192.168.16.53", "10.0.0.1"]
 
 proxmox_image   = "local:iso/talos-metal-qemu-1.7.5.iso"
 proxmox_storage = "local-zfs"
@@ -84,7 +84,7 @@ cloudflare_records = {
     ttl     = 1
     proxied = false
   }
-  "start.controlplane" = {
+  "star.controlplane" = {
     name    = "*.controlplane.k8s.integratn.tech"
     value   = "10.0.4.200"
     type    = "A"

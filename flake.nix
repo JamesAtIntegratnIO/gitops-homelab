@@ -25,7 +25,7 @@
             opentofu
             tflint
             terraform-docs
-            k3sup
+            kubecm
             curl
             kubectl
             kustomize
@@ -33,11 +33,19 @@
             krew
             k9s
             talosctl
+            jq
+            yq
           
           ];
           shellHook = ''
             set -a
             source ./secrets.env
+            source <(kubectl completion bash)
+            source <(kubecm completion bash)
+            source <(helm completion bash)
+            source <(argocd completion bash)
+            source <(kustomize completion bash)
+            srouce <(talosctl completion bash)
             set +a
             '';
         };

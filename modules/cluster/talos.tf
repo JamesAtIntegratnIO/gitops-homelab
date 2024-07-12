@@ -30,19 +30,19 @@ resource "talos_machine_configuration_apply" "controlplane" {
   node = each.key
   config_patches = [
     templatefile("${path.module}/templates/controlplane-machine.yaml.tmpl", {
-      hostname    = each.value.name
-      cert_sans   = [var.cluster_endpoint_ip]
-      vip         = var.cluster_endpoint_ip
-      ip_address  = each.key
-      cidr        = var.cidr
-      gateway     = var.gateway
-      nameservers = var.nameservers
-      disk        = var.install_disk
+      hostname        = each.value.name
+      cert_sans       = [var.cluster_endpoint_ip]
+      vip             = var.cluster_endpoint_ip
+      ip_address      = each.key
+      cidr            = var.cidr
+      gateway         = var.gateway
+      nameservers     = var.nameservers
+      disk            = var.install_disk
       extra_manifests = var.extra_manifests
     }),
   ]
 
-  depends_on = [ proxmox_vm_qemu.nodes ]
+  depends_on = [proxmox_vm_qemu.nodes]
 }
 
 resource "talos_machine_configuration_apply" "worker" {
@@ -62,7 +62,7 @@ resource "talos_machine_configuration_apply" "worker" {
       disk        = var.install_disk
     }),
   ]
-  depends_on = [ proxmox_vm_qemu.nodes ]
+  depends_on = [proxmox_vm_qemu.nodes]
 
 }
 
@@ -92,6 +92,6 @@ resource "local_file" "kubeconfig" {
   filename = "${path.root}/kubeconfig"
 
   lifecycle {
-    ignore_changes = [ content ]
+    ignore_changes = [content]
   }
 }

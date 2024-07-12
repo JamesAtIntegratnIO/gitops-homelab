@@ -9,7 +9,7 @@ terraform {
       version = "0.5.0"
     }
     kubernetes = {
-      source = "hashicorp/kubernetes"
+      source  = "hashicorp/kubernetes"
       version = "2.31.0"
     }
     helm = {
@@ -17,7 +17,7 @@ terraform {
       version = ">= 2.10.1"
     }
     cloudflare = {
-      source = "cloudflare/cloudflare"
+      source  = "cloudflare/cloudflare"
       version = "4.37.0"
     }
   }
@@ -31,13 +31,13 @@ provider "proxmox" {
 provider "talos" {}
 
 provider "kubernetes" {
-  config_path = "./kubeconfig"
+  config_path    = "./kubeconfig"
   config_context = join("@", ["admin", var.cluster_name])
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "./kubeconfig"
+    config_path    = "./kubeconfig"
     config_context = join("@", ["admin", var.cluster_name])
   }
 }

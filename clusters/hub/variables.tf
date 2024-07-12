@@ -1,15 +1,14 @@
 variable "nodes" {
   type = map(object({
     name             = string
-    cpu_sockets      = optional(number, 1)
-    cpu_cores        = optional(number, 2)
-    memory           = optional(number, 1024)
-    target_node_name = optional(string, "pve2")
-    disk_size        = optional(string, "32G")
-    macaddr          = optional(string, "00:00:00:00:00:00")
+    cpu_sockets      = number
+    cpu_cores        = number
+    memory           = number
+    target_node_name = string
+    disk_size        = string
+    macaddr          = string
 
     controlplane = optional(bool, false)
-    create_vm    = optional(bool, true)
   }))
 }
 ###################################################
@@ -74,4 +73,67 @@ variable "install_disk" {
 variable "extra_manifests" {
   type    = list(string)
   default = []
+}
+
+# ARGOCD
+
+variable "gitops_addons_org" {
+  type    = string
+  default = "https://github.com/jamesatintegratnio"
+}
+
+variable "gitops_addons_repo" {
+  type    = string
+  default = "gitops-bridge-argocd-control-plane"
+}
+
+variable "gitops_addons_basepath" {
+  type    = string
+  default = ""
+}
+
+variable "gitops_addons_path" {
+  type    = string
+  default = "bootstrap/control-plane/addons"
+}
+
+variable "gitops_addons_revision" {
+  type    = string
+  default = "homelab"
+}
+
+variable "skip_cluster_wait" {
+  type    = bool
+  default = false
+}
+
+variable "onepassword_credentials" {
+  type      = string
+  sensitive = true
+}
+
+variable "onepassword_token" {
+  type      = string
+  sensitive = true
+}
+
+# cloudflare
+
+variable "cloudflare_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "cloudflare_zone_name" {
+  type = string
+}
+
+variable "cloudflare_records" {
+  type = map(object({
+    name    = string
+    value   = string
+    type    = string
+    ttl     = number
+    proxied = bool
+  }))
 }
