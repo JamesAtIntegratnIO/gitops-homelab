@@ -75,8 +75,18 @@ variable "extra_manifests" {
   type    = list(string)
   default = []
 }
+############################################
+#    ___  ______ _____ _____ ___________   #
+#   / _ \ | ___ \  __ \  _  /  __ \  _  \  #
+#  / /_\ \| |_/ / |  \/ | | | /  \/ | | |  #
+#  |  _  ||    /| | __| | | | |   | | | |  #
+#  | | | || |\ \| |_\ \ \_/ / \__/\ |/ /   #
+#  \_| |_/\_| \_|\____/\___/ \____/___/    #
+#                                          #
+############################################
 
-# ARGOCD
+
+
 
 variable "gitops_addons_org" {
   type    = string
@@ -91,6 +101,43 @@ variable "gitops_addons_repo" {
 variable "gitops_addons_basepath" {
   type    = string
   default = ""
+}
+####################################################################
+#   _    _            _    _                 _       _____ _ _     #
+#  | |  | |          | |  | |               | |     |  __ (_) |    #
+#  | |  | | ___  _ __| | _| | ___   __ _  __| |___  | |  \/_| |_   #
+#  | |/\| |/ _ \| '__| |/ / |/ _ \ / _` |/ _` / __| | | __| | __|  #
+#  \  /\  / (_) | |  |   <| | (_) | (_| | (_| \__ \ | |_\ \ | |_   #
+#   \/  \/ \___/|_|  |_|\_\_|\___/ \__,_|\__,_|___/  \____/_|\__|  #
+#                                                                  #
+####################################################################
+
+
+
+variable "gitops_workload_org" {
+  description = "Git repository org/user contains for workload"
+  type        = string
+  default     = "https://github.com/argoproj"
+}
+variable "gitops_workload_repo" {
+  description = "Git repository contains for workload"
+  type        = string
+  default     = "argocd-example-apps"
+}
+variable "gitops_workload_revision" {
+  description = "Git repository revision/branch/ref for workload"
+  type        = string
+  default     = "master"
+}
+variable "gitops_workload_basepath" {
+  description = "Git repository base path for workload"
+  type        = string
+  default     = ""
+}
+variable "gitops_workload_path" {
+  description = "Git repository path for workload"
+  type        = string
+  default     = "helm-guestbook"
 }
 
 variable "gitops_addons_path" {
@@ -117,8 +164,15 @@ variable "onepassword_token" {
   type      = string
   sensitive = true
 }
-
-# cloudflare
+######################################################################
+#   _____  _     _____ _   _____________ _       ___  ______ _____   #
+#  /  __ \| |   |  _  | | | |  _  \  ___| |     / _ \ | ___ \  ___|  #
+#  | /  \/| |   | | | | | | | | | | |_  | |    / /_\ \| |_/ / |__    #
+#  | |    | |   | | | | | | | | | |  _| | |    |  _  ||    /|  __|   #
+#  | \__/\| |___\ \_/ / |_| | |/ /| |   | |____| | | || |\ \| |___   #
+#   \____/\_____/\___/ \___/|___/ \_|   \_____/\_| |_/\_| \_\____/   #
+#                                                                    #
+######################################################################                                                              
 
 variable "cloudflare_api_key" {
   type      = string

@@ -55,10 +55,20 @@ resource "time_sleep" "wait_for_cluster" {
 }
 
 locals {
+  name = "media-cluster"
+  environment = "prod"
+
   gitops_addons_url      = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
   gitops_addons_basepath = var.gitops_addons_basepath
   gitops_addons_path     = var.gitops_addons_path
   gitops_addons_revision = var.gitops_addons_revision
+
+  gitops_workload_org      = var.gitops_workload_org
+  gitops_workload_repo     = var.gitops_workload_repo
+  gitops_workload_basepath = var.gitops_workload_basepath
+  gitops_workload_path     = var.gitops_workload_path
+  gitops_workload_revision = var.gitops_workload_revision
+  gitops_workload_url      = "${local.gitops_workload_org}/${local.gitops_workload_repo}"
 
   addons_metadata = merge(
     {
@@ -71,20 +81,26 @@ locals {
       external_dns_namespace                    = "external-dns"
       cert_manager_namespace                    = "cert-manager"
       nfs_subdir_external_provisioner_namespace = "nfs-provisioner"
+    },
+    {
+      workload_repo_url      = local.gitops_workload_url
+      workload_repo_basepath = local.gitops_workload_basepath
+      workload_repo_path     = local.gitops_workload_path
+      workload_repo_revision = local.gitops_workload_revision
     }
   )
 
-  addons = {
-    enable_argon_cd                        = true
-    enable_ingress_nginx                   = true
-    enable_metallb                         = true
-    enable_op_connect                      = true
-    enable_external_dns                    = true
-    enable_cert_manager                    = true
-    enable_nfs_subdir_external_provisioner = true
-
-  }
-
+  addons = merge(
+    {
+      enable_argocd                          = true
+      enable_ingress_nginx                   = true
+      enable_metallb                         = true
+      enable_op_connect                      = true
+      enable_external_dns                    = true
+      enable_cert_manager                    = true
+      enable_nfs_subdir_external_provisioner = true
+    }, 
+  )
 }
 
 module "argocd" {
@@ -96,8 +112,8 @@ module "argocd" {
 
   install = false
   cluster = {
-    cluster_name = var.cluster_name
-    environment  = "prod"
+    cluster_name = local.name
+    environment  = local.environment
     metadata     = local.addons_metadata
 
     addons = local.addons
@@ -114,8 +130,21 @@ module "argocd" {
       }
     EOT
   }
-
-
-
   depends_on = [time_sleep.wait_for_cluster, kubernetes_secret.onepassword_token]
+}
+
+resource "kubernetes_secret" "docker-config" {
+  provider = kubernetes
+  metadata {
+    name      = "ghcr-login-secret"
+    namespace = "argocd"
+  }
+
+  data = {
+    ".dockerconfigjson" = "${file("${path.module}/dockerconfig.json")}"
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  depends_on = [module.argocd]
 }

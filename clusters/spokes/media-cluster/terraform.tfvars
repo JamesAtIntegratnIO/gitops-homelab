@@ -36,3 +36,9 @@ extra_manifests = [
   "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
   "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
 ]
+
+gitops_workload_basepath = ""
+gitops_workload_path     = "workloads"
+gitops_workload_revision = "main"
+gitops_workload_repo     = "gitops-homelab-private"
+gitops_workload_org      = "https://github.com/jamesatintegratnio"
