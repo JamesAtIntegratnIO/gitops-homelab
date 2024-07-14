@@ -158,6 +158,7 @@ variable "skip_cluster_wait" {
 variable "onepassword_credentials" {
   type      = string
   sensitive = true
+  description = "base64 encoded 1password credentials"
 }
 
 variable "onepassword_token" {

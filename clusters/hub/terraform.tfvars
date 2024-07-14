@@ -5,7 +5,7 @@ nodes = {
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 2
-    memory           = 4096
+    memory           = 6144
     controlplane     = true
     macaddr          = "0a:bc:b0:fc:95:d7"
   }
@@ -15,43 +15,43 @@ nodes = {
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 2
-    memory           = 4096
+    memory           = 6144
     controlplane     = true
     macaddr          = "da:e2:ee:31:02:6e"
   }
   "10.0.4.103" = {
     name             = "talos-cp-3"
-    target_node_name = "pve2"
+    target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 2
-    memory           = 4096
+    memory           = 6192
     controlplane     = true
     macaddr          = "7e:08:b4:f9:3b:5e"
   }
   "10.0.4.104" = {
-    name             = "talows-w-1"
+    name             = "talos-w-1"
     target_node_name = "pve2"
     disk_size        = "32G"
-    cpu_sockets      = 2
+    cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
     macaddr          = "1e:b8:d6:c6:f9:85"
   }
   "10.0.4.105" = {
-    name             = "talows-w-2"
+    name             = "talos-w-2"
     target_node_name = "pve2"
     disk_size        = "32G"
-    cpu_sockets      = 2
+    cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
     macaddr          = "ee:8b:b0:43:78:9a"
   }
   "10.0.4.106" = {
-    name             = "talows-w-3"
-    target_node_name = "pve2"
+    name             = "talos-w-3"
+    target_node_name = "pve"
     disk_size        = "32G"
-    cpu_sockets      = 2
+    cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
     macaddr          = "0e:c0:fe:f9:87:07"
@@ -67,7 +67,7 @@ nameservers         = ["192.168.16.53", "10.0.0.1"]
 proxmox_image   = "local:iso/talos-metal-qemu-1.7.5.iso"
 proxmox_storage = "local-zfs"
 
-cluster_name = "get-rekt-talos"
+cluster_name = "controlplane-cluster"
 
 extra_manifests = [
   "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
@@ -78,14 +78,14 @@ cloudflare_zone_name = "integratn.tech"
 
 cloudflare_records = {
   "controlplane" = {
-    name    = "controlplane.k8s.integratn.tech"
+    name    = "controlplane.integratn.tech"
     value   = "10.0.4.200"
     type    = "A"
     ttl     = 1
     proxied = false
   }
   "star.controlplane" = {
-    name    = "*.controlplane.k8s.integratn.tech"
+    name    = "*.controlplane.integratn.tech"
     value   = "10.0.4.200"
     type    = "A"
     ttl     = 1

@@ -125,6 +125,16 @@ This Terraform project simplifies the process of deploying and managing a Talos 
 ## Notes that need sorted
 static IPs are really hard with talos on first boot. cheat and set a static IP in your dhcp server with some reserved macs that you will apply to your nodes. Generate unicast macs here: https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast 
 
+If a namespace gets stuck on destroy
+  1. cancel the destroy
+  2. Run the following script 
+ ```
+kubectl get namespace "stucked-namespace" -o json \
+  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" \
+  | kubectl replace --raw /api/v1/namespaces/stucked-namespace/finalize -f -
+```
+  3. reapply the destroy
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

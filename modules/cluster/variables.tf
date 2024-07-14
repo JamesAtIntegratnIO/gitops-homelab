@@ -41,8 +41,13 @@ variable "gateway" {
 variable "proxmox_storage" {
   type    = string
   default = "local-zfs"
-
 }
+
+variable "tags" {
+  type    = list(string)
+  default = []
+}
+
 #####################################
 #   _____ ___   _     _____ _____   #
 #  |_   _/ _ \ | |   |  _  /  ___|  #

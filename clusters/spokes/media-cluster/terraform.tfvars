@@ -40,5 +40,5 @@ extra_manifests = [
 gitops_workload_basepath = ""
 gitops_workload_path     = "workloads"
 gitops_workload_revision = "main"
-gitops_workload_repo     = "gitops-homelab-private"
-gitops_workload_org      = "https://github.com/jamesatintegratnio"
+gitops_workload_repo     = "gitops-homelab-private.git"
+gitops_workload_org      = "git@github.com:JamesAtIntegratnIO"

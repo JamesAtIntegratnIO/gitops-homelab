@@ -55,7 +55,7 @@ resource "time_sleep" "wait_for_cluster" {
 }
 
 locals {
-  name = "media-cluster"
+  name = module.cluster.cluster_name
   environment = "prod"
 
   gitops_addons_url      = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
@@ -82,12 +82,18 @@ locals {
       cert_manager_namespace                    = "cert-manager"
       nfs_subdir_external_provisioner_namespace = "nfs-provisioner"
     },
+  )
+
+  workloads_metadata = merge(
+    {
+      cluster_name = local.name
+    },
     {
       workload_repo_url      = local.gitops_workload_url
       workload_repo_basepath = local.gitops_workload_basepath
       workload_repo_path     = local.gitops_workload_path
       workload_repo_revision = local.gitops_workload_revision
-    }
+    },
   )
 
   addons = merge(
@@ -103,7 +109,7 @@ locals {
   )
 }
 
-module "argocd" {
+module "hub_cluster" {
   source = "git@github.com:jamesAtIntegratnIO/terraform-helm-gitops-bridge?ref=homelab"
 
   providers = {
@@ -117,6 +123,7 @@ module "argocd" {
     metadata     = local.addons_metadata
 
     addons = local.addons
+    
 
     server = "https://${var.cluster_endpoint_ip}:6443"
     config = <<-EOT
@@ -130,8 +137,33 @@ module "argocd" {
       }
     EOT
   }
+  
   depends_on = [time_sleep.wait_for_cluster, kubernetes_secret.onepassword_token]
 }
+
+module "spoke_cluster" {
+  source = "git@github.com:jamesAtIntegratnIO/terraform-helm-gitops-bridge?ref=homelab"
+
+  providers = {
+    kubernetes = kubernetes
+  }
+
+  install = false # Not installing argocd via helm on spoke cluster as it is installed by the hub cluster addons
+  cluster = {
+    cluster_name = local.name
+    environment  = local.environment
+    metadata     = local.workloads_metadata
+    addons = {
+      enable_argocd = false # ArgoCD is deployed from Hub Cluster
+    }
+  }
+  apps = {
+    workloads = file("${path.module}/bootstrap/workloads.yaml")
+  }
+
+  depends_on = [time_sleep.wait_for_cluster]
+}
+
 
 resource "kubernetes_secret" "docker-config" {
   provider = kubernetes
@@ -146,5 +178,5 @@ resource "kubernetes_secret" "docker-config" {
 
   type = "kubernetes.io/dockerconfigjson"
 
-  depends_on = [module.argocd]
+  depends_on = [module.hub_cluster]
 }

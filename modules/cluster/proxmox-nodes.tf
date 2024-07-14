@@ -19,6 +19,11 @@ resource "proxmox_vm_qemu" "nodes" {
   memory  = each.value.memory
   scsihw  = "virtio-scsi-pci"
 
+  # cluster-names are only allowed to have `-` while tags are only allowed to have `_`
+  tags = join(",", concat([replace(var.cluster_name, "-", "_"),
+    each.value.controlplane ? "controlplane" : "worker"], 
+    [for s in var.tags : replace(s, "-", "_")]))
+
   vga {
     memory = 0
     type   = "virtio"
