@@ -22,6 +22,18 @@ nodes = {
     name      = "pi-cluster-5"
     create_vm = false
   }
+  # "10.0.3.106" = {
+  #   name             = "pi-cluster-6"
+  #   create_vm        = true
+  #   target_node_name = "pve"
+  #   disk_size        = "32G"
+  #   cpu_sockets      = 1
+  #   cpu_cores        = 4
+  #   memory           = 8192
+  #   controlplane     = false
+  #   macaddr          = "36:e0:b5:9e:5d:71"
+  #   nvidia           = true
+  # }
 }
 
 ip_base             = "10.0.3.0"

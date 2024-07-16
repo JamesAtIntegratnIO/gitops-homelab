@@ -11,7 +11,7 @@ nodes = {
   }
   "10.0.4.102" = {
     name             = "talos-cp-2"
-    target_node_name = "pve2"
+    target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 2
@@ -68,6 +68,7 @@ proxmox_image   = "local:iso/talos-metal-qemu-1.7.5.iso"
 proxmox_storage = "local-zfs"
 
 cluster_name = "controlplane-cluster"
+allow_scheduling_on_controlplane = true
 
 extra_manifests = [
   "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",

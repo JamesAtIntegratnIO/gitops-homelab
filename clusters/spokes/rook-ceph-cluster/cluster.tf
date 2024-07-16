@@ -1,16 +1,17 @@
 module "cluster" {
   source = "../../../modules/cluster"
 
-  nodes               = var.nodes
-  ip_base             = var.ip_base
-  cidr                = var.cidr
-  gateway             = var.gateway
-  cluster_endpoint_ip = var.cluster_endpoint_ip
-  nameservers         = var.nameservers
-  proxmox_image       = var.proxmox_image
-  proxmox_storage     = var.proxmox_storage
-  cluster_name        = var.cluster_name
-  extra_manifests     = var.extra_manifests
+  nodes                            = var.nodes
+  ip_base                          = var.ip_base
+  cidr                             = var.cidr
+  gateway                          = var.gateway
+  cluster_endpoint_ip              = var.cluster_endpoint_ip
+  nameservers                      = var.nameservers
+  proxmox_image                    = var.proxmox_image
+  proxmox_storage                  = var.proxmox_storage
+  cluster_name                     = var.cluster_name
+  extra_manifests                  = var.extra_manifests
+  allow_scheduling_on_controlplane = var.allow_scheduling_on_controlplane
 
 }
 
@@ -21,16 +22,16 @@ module "cloudflare" {
   cloudflare_zone_name = var.cloudflare_zone_name
   cloudflare_records = {
     "media-cluster" = {
-      name    = "media-cluster.integratn.tech"
+      name    = "rook-ceph-cluster.integratn.tech"
       type    = "A"
-      value   = "10.0.3.200"
+      value   = "10.0.5.200"
       proxied = false
       ttl     = 1
     }
     "star.media-cluster" = {
-      name    = "*.media-cluster.integratn.tech"
+      name    = "*.rook-ceph-cluster.integratn.tech"
       type    = "A"
-      value   = "10.0.3.200"
+      value   = "10.0.5.200"
       proxied = false
       ttl     = 1
     }
@@ -179,70 +180,4 @@ resource "kubernetes_secret" "docker-config" {
   type = "kubernetes.io/dockerconfigjson"
 
   depends_on = [module.hub_cluster]
-}
-
-resource "kubernetes_manifest" "nvidia_runtimeclass" {
-  provider = kubernetes
-  manifest = {
-    apiVersion = "node.k8s.io/v1"
-    kind       = "RuntimeClass"
-    metadata = {
-      name = "nvidia"
-    }
-    handler = "nvidia"
-  }
-
-  depends_on = [module.spoke_cluster]
-}
-
-resource "kubernetes_node_taint" "nvidia_gpu_true" {
-  provider = kubernetes
-  for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
-
-  metadata {
-    name = each.value.name
-  }
-
-  taint {
-    key    = "nvidia.com/gpu"
-    value  = "true"
-    effect = "NoSchedule"
-  }
-
-  depends_on = [module.spoke_cluster]
-}
-
-resource "kubernetes_node_taint" "nvidia_gpu" {
-  for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
-
-  metadata {
-    name = each.value.name
-  }
-
-  taint {
-    key    = "nvidia.com/gpu"
-    value  = ""
-    effect = "NoSchedule"
-  }
-
-  depends_on = [module.spoke_cluster]
-}
-
-
-resource "kubernetes_node_taint" "nvidia_gpu_present" {
-  provider = kubernetes
-  for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
-
-  metadata {
-    name = each.value.name
-  }
-
-  taint {
-    key    = "nvidia.com/gpu"
-    value  = "present"
-    effect = "NoSchedule"
-  }
-
-  depends_on = [module.spoke_cluster]
-
 }

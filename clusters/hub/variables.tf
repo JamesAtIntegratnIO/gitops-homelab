@@ -75,6 +75,11 @@ variable "extra_manifests" {
   default = []
 }
 
+variable "allow_scheduling_on_controlplane" {
+  type    = bool
+  default = false
+}
+
 # ARGOCD
 
 variable "gitops_addons_org" {
@@ -108,8 +113,8 @@ variable "skip_cluster_wait" {
 }
 
 variable "onepassword_credentials" {
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
   description = "base64 encoded 1password credentials"
 }
 

@@ -29,3 +29,6 @@ cluster:
 %{ for manifest in extra_manifests ~}
     - ${manifest}
 %{ endfor ~}
+%{ if allow_scheduling_on_controlplane == true ~}
+  allowSchedulingOnControlPlanes: true
+%{ endif ~}

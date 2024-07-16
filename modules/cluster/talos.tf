@@ -39,6 +39,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       nameservers     = var.nameservers
       disk            = var.install_disk
       extra_manifests = var.extra_manifests
+      allow_scheduling_on_controlplane = var.allow_scheduling_on_controlplane
     }),
   ]
 
@@ -60,6 +61,7 @@ resource "talos_machine_configuration_apply" "worker" {
       gateway     = var.gateway
       nameservers = var.nameservers
       disk        = var.install_disk
+      nvidia      = each.value.nvidia
     }),
   ]
   depends_on = [proxmox_vm_qemu.nodes]

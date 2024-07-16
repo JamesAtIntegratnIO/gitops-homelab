@@ -45,6 +45,7 @@ variable "proxmox_storage" {
   default = "local-zfs"
 
 }
+
 #####################################
 #   _____ ___   _     _____ _____   #
 #  |_   _/ _ \ | |   |  _  /  ___|  #
@@ -77,6 +78,12 @@ variable "extra_manifests" {
   type    = list(string)
   default = []
 }
+
+variable "allow_scheduling_on_controlplane" {
+  type    = bool
+  default = false
+}
+
 ############################################
 #    ___  ______ _____ _____ ___________   #
 #   / _ \ | ___ \  __ \  _  /  __ \  _  \  #

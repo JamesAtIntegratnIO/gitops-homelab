@@ -8,8 +8,9 @@ resource "proxmox_vm_qemu" "nodes" {
   agent_timeout          = 90
   define_connection_info = false
   os_type                = "cloud-init"
-  clone                  = "talos-1.7.5-template"
-  qemu_os                = "l26"
+  # clone                  = "talos-1.7.5-template"
+  clone                  = coalesce(each.value.vm_template, var.vm_template, "talos-1.7.5-template")
+  qemu_os = "l26"
   # ipconfig0              = "ip=${each.key}/${var.cidr},gw=${var.gateway}"
 
   onboot  = false
@@ -21,8 +22,8 @@ resource "proxmox_vm_qemu" "nodes" {
 
   # cluster-names are only allowed to have `-` while tags are only allowed to have `_`
   tags = join(",", concat([replace(var.cluster_name, "-", "_"),
-    each.value.controlplane ? "controlplane" : "worker"], 
-    [for s in var.tags : replace(s, "-", "_")]))
+    each.value.controlplane ? "controlplane" : "worker"],
+  [for s in var.tags : replace(s, "-", "_")]))
 
   vga {
     memory = 0
@@ -58,6 +59,7 @@ resource "proxmox_vm_qemu" "nodes" {
         }
       }
     }
+
   }
 
   lifecycle {
@@ -70,6 +72,7 @@ resource "proxmox_vm_qemu" "nodes" {
       ipconfig0,
       ipconfig1,
       define_connection_info,
+      hostpci
     ]
   }
 }
