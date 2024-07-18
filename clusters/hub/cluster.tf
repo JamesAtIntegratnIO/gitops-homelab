@@ -51,7 +51,7 @@ locals {
     enable_external_dns                    = true
     enable_cert_manager                    = true
     enable_nfs_subdir_external_provisioner = true
-
+    enable_stakater_reloader               = true
   }
 
 }
