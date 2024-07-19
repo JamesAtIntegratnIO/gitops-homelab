@@ -21,7 +21,7 @@ nodes = {
   }
   "10.0.5.103" = {
     name             = "monitoring-3"
-    target_node_name = "pve3"
+    target_node_name = "pve2"
     disk_size        = "256G"
     cpu_sockets      = 2
     cpu_cores        = 2
@@ -48,12 +48,12 @@ allow_scheduling_on_controlplane = true
 
 gitops_addons_org = "https://github.com/jamesatintegratnio"
 gitops_addons_repo = "gitops-homelab"
-gitops_addons_basepath = "gitops"
+gitops_addons_basepath = "gitops/"
 gitops_addons_path = "bootstrap/control-plane/addons"
 gitops_addons_revision = "main"
 
-gitops_workload_basepath = ""
-gitops_workload_path     = "workloads"
+gitops_workload_basepath = "gitops/"
+gitops_workload_path     = "workloads/monitoring-cluster"
 gitops_workload_revision = "main"
-gitops_workload_repo     = "gitops-bridge-argocd-control-plane.git"
+gitops_workload_repo     = "gitops-homelab"
 gitops_workload_org      = "git@github.com:JamesAtIntegratnIO"

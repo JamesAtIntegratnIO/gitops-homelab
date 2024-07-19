@@ -1,5 +1,5 @@
 module "cluster" {
-  source = "../../../modules/cluster"
+  source = "../../modules/cluster"
 
   nodes                            = var.nodes
   ip_base                          = var.ip_base
@@ -17,18 +17,18 @@ module "cluster" {
 
 
 module "cloudflare" {
-  source = "../../../modules/cloudflare"
+  source = "../../modules/cloudflare"
 
   cloudflare_zone_name = var.cloudflare_zone_name
   cloudflare_records = {
-    "media-cluster" = {
+    "monitoring-cluster" = {
       name    = "monitoring.integratn.tech"
       type    = "A"
       value   = "10.0.5.200"
       proxied = false
       ttl     = 1
     }
-    "star.media-cluster" = {
+    "star.monitoring-cluster" = {
       name    = "*.monitoring.integratn.tech"
       type    = "A"
       value   = "10.0.5.200"

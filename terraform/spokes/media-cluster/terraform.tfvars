@@ -51,7 +51,7 @@ extra_manifests = [
 
 gitops_addons_org = "https://github.com/jamesatintegratnio"
 gitops_addons_repo = "gitops-homelab"
-gitops_addons_basepath = "gitops"
+gitops_addons_basepath = "gitops/"
 gitops_addons_path = "bootstrap/control-plane/addons"
 gitops_addons_revision = "main"
 

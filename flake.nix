@@ -52,6 +52,17 @@
           [[ -n "''${DEBUG:-}" ]] && set -x
 
           ''${ROOTDIR}/terraform/hub/deploy.sh
+
+          # Loop through each directory in ''${ROOTDIR}/terraform/spokes/ and run deploy.sh
+          for dir in ''${ROOTDIR}/terraform/spokes/*/; do
+            if [[ -d "$dir" && -f "''${dir}deploy.sh" ]]; then
+              echo "Running deploy.sh in $dir"
+              chmod +x "''${dir}deploy.sh"
+              "''${dir}deploy.sh"
+            else
+              echo "Skipping $dir, no deploy.sh found"
+            fi
+          done
         '')
       ];
       nativeBuildInputs = with pkgs; [
