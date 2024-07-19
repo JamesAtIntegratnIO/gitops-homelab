@@ -4,5 +4,3 @@ server:
   service:
     annotations:
       metallb.universe.tf/loadBalancerIPs: 10.0.5.201
-
-
