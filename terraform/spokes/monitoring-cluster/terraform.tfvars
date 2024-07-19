@@ -5,7 +5,7 @@ nodes = {
     disk_size        = "256G"
     cpu_sockets      = 1
     cpu_cores        = 4
-    memory           = 1536
+    memory           = 8192
     controlplane     = true
     macaddr          = "6a:61:17:7b:2e:6e"
   }
@@ -15,7 +15,7 @@ nodes = {
     disk_size        = "256G"
     cpu_sockets      = 2
     cpu_cores        = 2
-    memory           = 1536
+    memory           = 8192
     controlplane     = true
     macaddr          = "ba:95:dd:40:35:1c"
   }
@@ -25,7 +25,7 @@ nodes = {
     disk_size        = "256G"
     cpu_sockets      = 2
     cpu_cores        = 2
-    memory           = 1536
+    memory           = 8192
     controlplane     = true
     macaddr          = "e6:51:ce:7b:5c:35"
   }
