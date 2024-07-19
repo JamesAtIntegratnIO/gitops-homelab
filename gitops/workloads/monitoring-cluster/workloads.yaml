@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: monitoring-cluster-workloads
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
+  generators:
+  - git:
+      repoURL: https://github.com/jamesatintegratnio/gitops-homelab.git
+      revision: '{{.metadata.annotations.workload_repo_revision}}'
+      directories:
+      - path: '{{.metadata.annotations.workload_repo_basepath}}{{.metadata.annotations.workload_repo_path}}/{{.metadata.cluster_name}}/*'
+      - path: '{{.metadata.annotations.workload_repo_basepath}}{{.metadata.annotations.workload_repo_path}}/{{.metadata.cluster_name}}/exclude'
+        exclude: true
+  template:
+    metadata:
+      name: '{{.metadata.cluster_name}}-{{.path.basenameNormalized}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{.metadata.annotations.workload_repo_url}}'
+        targetRevision: '{{.metadata.annotations.workload_repo_revision}}'
+        path: '{{.path.path}}'
+      destination:
+        namespace: '{{.path.basenameNormalized}}'
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
