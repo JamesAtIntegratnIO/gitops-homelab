@@ -1,8 +1,0 @@
-resources: []
-helmCharts:
-  - name: minio
-    includeCRDs: true
-    releaseName: app-template
-    version: 3.2.1
-    repo: https://bjw-s.github.io/helm-charts
-    valuesFile: values.yaml

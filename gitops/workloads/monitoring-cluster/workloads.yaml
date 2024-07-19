@@ -10,19 +10,27 @@ spec:
     - git:
         repoURL: 'git@github.com:jamesAtIntegratnIO/gitops-homelab.git'
         revision: 'main'
-        directories:
-        - path: 'gitops/workloads/monitoring-cluster/*'
-        - path: 'gitops/workloads/monitoring-cluster/exclude'
-          exclude: true
+        files:
+        - path: 'gitops/workloads/monitoring-cluster/*/config.json'
   template:
     metadata:
       name: '{{.path.basenameNormalized}}'
     spec:
       project: default
-      source:
-        repoURL: 'git@github.com:jamesAtIntegratnIO/gitops-homelab.git'
-        targetRevision: 'main'
-        path: '{{.path.path}}'
+      sources:
+        - chart: '{{.chartName}}'
+          repoURL: '{{.chartRepoURL}}'
+          targetRevision: '{{.chartRevision}}'
+          helm:
+            releaseName: '{{.path.basenameNormalized}}'
+            ignoreMissingValueFiles: true
+            valueFiles: 
+              - $values/{{.path.path}}/manifests/values.yaml
+        - repoURL: 'git@github.com:jamesAtIntegratnIO/gitops-homelab.git'
+          targetRevision: 'main'
+          path: '{{.path.path}}/manifests'
+          ref: values
+
       destination:
         namespace: '{{.path.basenameNormalized}}'
         name: 'monitoring-cluster'
