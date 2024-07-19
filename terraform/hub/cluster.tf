@@ -1,5 +1,5 @@
 module "cluster" {
-  source = "../../modules/cluster"
+  source = "../modules/cluster"
 
   nodes               = var.nodes
   ip_base             = var.ip_base
@@ -17,7 +17,7 @@ module "cluster" {
 }
 
 module "cloudflare" {
-  source = "../../modules/cloudflare"
+  source = "../modules/cloudflare"
 
   cloudflare_zone_name = var.cloudflare_zone_name
   cloudflare_records   = var.cloudflare_records

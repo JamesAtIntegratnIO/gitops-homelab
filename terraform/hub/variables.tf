@@ -89,12 +89,12 @@ variable "gitops_addons_org" {
 
 variable "gitops_addons_repo" {
   type    = string
-  default = "gitops-bridge-argocd-control-plane"
+  default = "gitops-homelab"
 }
 
 variable "gitops_addons_basepath" {
   type    = string
-  default = ""
+  default = "gitops"
 }
 
 variable "gitops_addons_path" {

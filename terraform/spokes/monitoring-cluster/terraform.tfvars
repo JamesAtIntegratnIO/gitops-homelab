@@ -46,6 +46,12 @@ extra_manifests = [
 
 allow_scheduling_on_controlplane = true
 
+gitops_addons_org = "https://github.com/jamesatintegratnio"
+gitops_addons_repo = "gitops-homelab"
+gitops_addons_basepath = "gitops"
+gitops_addons_path = "bootstrap/control-plane/addons"
+gitops_addons_revision = "main"
+
 gitops_workload_basepath = ""
 gitops_workload_path     = "workloads"
 gitops_workload_revision = "main"

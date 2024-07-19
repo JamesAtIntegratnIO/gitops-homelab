@@ -70,6 +70,12 @@ proxmox_storage = "local-zfs"
 cluster_name = "controlplane-cluster"
 allow_scheduling_on_controlplane = true
 
+gitops_addons_org = "https://github.com/jamesatintegratnio"
+gitops_addons_repo = "gitops-homelab"
+gitops_addons_basepath = "gitops/"
+gitops_addons_path = "bootstrap/control-plane/addons"
+gitops_addons_revision = "main"
+
 extra_manifests = [
   "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
   "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
