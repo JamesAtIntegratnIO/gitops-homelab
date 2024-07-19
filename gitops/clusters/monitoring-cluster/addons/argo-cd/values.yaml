@@ -1,5 +1,5 @@
 global:
-  domain: argocd.rook-ceph-cluster.integratn.tech
+  domain: argocd.monitoring.integratn.tech
 server:
   service:
     annotations:
