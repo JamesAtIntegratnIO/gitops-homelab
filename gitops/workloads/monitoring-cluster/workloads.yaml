@@ -7,25 +7,25 @@ spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
   generators:
-  - git:
-      repoURL: https://github.com/jamesatintegratnio/gitops-homelab.git
-      revision: '{{.metadata.annotations.workload_repo_revision}}'
-      directories:
-      - path: '{{.metadata.annotations.workload_repo_basepath}}{{.metadata.annotations.workload_repo_path}}/{{.metadata.cluster_name}}/*'
-      - path: '{{.metadata.annotations.workload_repo_basepath}}{{.metadata.annotations.workload_repo_path}}/{{.metadata.cluster_name}}/exclude'
-        exclude: true
+    - git:
+        repoURL: 'git@github.com:jamesAtIntegratnIO/gitops-homelab.git'
+        revision: 'main'
+        directories:
+        - path: 'gitops/workloads/monitoring-cluster/*'
+        - path: 'gitops/workloads/monitoring-cluster/exclude'
+          exclude: true
   template:
     metadata:
-      name: '{{.metadata.cluster_name}}-{{.path.basenameNormalized}}'
+      name: '{{.path.basenameNormalized}}'
     spec:
       project: default
       source:
-        repoURL: '{{.metadata.annotations.workload_repo_url}}'
-        targetRevision: '{{.metadata.annotations.workload_repo_revision}}'
+        repoURL: 'git@github.com:jamesAtIntegratnIO/gitops-homelab.git'
+        targetRevision: 'main'
         path: '{{.path.path}}'
       destination:
         namespace: '{{.path.basenameNormalized}}'
-        server: https://kubernetes.default.svc
+        name: 'monitoring-cluster'
       syncPolicy:
         automated: {}
         syncOptions:
