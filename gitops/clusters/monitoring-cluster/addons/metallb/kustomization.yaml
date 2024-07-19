@@ -1,0 +1,3 @@
+resources:
+  - ip_address_pool.yaml
+  - l2_advertisement.yaml

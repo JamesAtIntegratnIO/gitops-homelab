@@ -1,0 +1,8 @@
+connect:
+  ingress:
+    hosts:
+      - host: op-connect.media-cluster.integratn.tech
+    tls:
+      - secretName: op-connect-tls
+        hosts:
+          - op-connect.media-cluster.integratn.tech

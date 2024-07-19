@@ -1,0 +1,29 @@
+global:
+  leaderElection:
+    namespace: cert-manager
+namespace: cert-manager
+webhook:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 263M
+    limits:
+      cpu: 150m
+      memory: 322M
+cainjector:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 263M
+    limits:
+      cpu: 149m
+      memory: 675M
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 263M
+  limits:
+    cpu: 150m
+    memory: 677M
+installCRDs: true

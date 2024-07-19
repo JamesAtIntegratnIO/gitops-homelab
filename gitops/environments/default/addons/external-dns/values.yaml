@@ -1,0 +1,14 @@
+env:
+  - name: EXTERNAL_DNS_PIHOLE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: EXTERNAL_DNS_PIHOLE_PASSWORD
+        name: pihole-password
+domainFilters:
+  - integratn.tech
+
+provider:
+  name: pihole
+
+extraArgs:
+  - --pihole-server=http://192.168.16.53

@@ -1,0 +1,15 @@
+# Helm chart values
+
+controller:
+  publishService:
+    enabled: true
+  service:
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: 10.0.2.200
+      metallb.universe.tf/address-pool: default
+  allowSnippetAnnotations: true
+  metrics:
+    enabled: true
+  podAnnotations:
+    prometheus.io/port: "10254"
+    prometheus.io/scrape: "true"

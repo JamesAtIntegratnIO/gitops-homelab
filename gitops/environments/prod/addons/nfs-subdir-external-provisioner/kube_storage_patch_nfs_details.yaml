@@ -1,0 +1,29 @@
+# patch_nfs_details.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nfs-client
+  name: nfs-client
+spec:
+  template:
+    spec:
+      containers:
+        - name: nfs-client
+          env:
+            - name: NFS_SERVER
+              value: 10.0.0.12
+            - name: NFS_PATH
+              value: /mnt/user/kube_storage
+          resources:
+            requests:
+              cpu: 25m
+              memory: 263M
+            limits:
+              cpu: 937m
+              memory: 980M
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 10.0.0.12
+            path: /mnt/user/kube_storage
