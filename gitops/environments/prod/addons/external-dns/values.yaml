@@ -4,14 +4,22 @@ env:
       secretKeyRef:
         key: EXTERNAL_DNS_PIHOLE_PASSWORD
         name: pihole-password
+  - name: CF_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-api-key
+        key: CF_API_KEY
+  - name: CF_API_EMAIL
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-api-key
+        key: CF_API_EMAIL
 domainFilters:
   - integratn.tech
 
 provider:
-  name: pihole
+  name: cloudflare
 
-extraArgs:
-  - --pihole-server=http://192.168.16.53
 
 resources:
   requests:

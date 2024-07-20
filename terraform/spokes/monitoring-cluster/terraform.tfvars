@@ -35,7 +35,7 @@ ip_base             = "10.0.5.0"
 cidr                = 9
 gateway             = "10.0.0.1"
 cluster_endpoint_ip = "10.0.5.100"
-nameservers         = ["192.168.16.53", "10.0.0.1"]
+nameservers         = ["1.1.1.1", "10.0.0.1"]
 
 cluster_name = "monitoring-cluster"
 

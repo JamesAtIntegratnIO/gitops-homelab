@@ -1,23 +1,32 @@
+secrets:
+  name: &name default-tenant-config
 tenant:
   name: default
   configuration: 
-    name: default-tenant-config
+    name: *name
   pools:
-    - servers: 3
-      name: default-pool
-      size: 50Gi
-      volumesPerServer: 4
-      volumeClaimTemplate:
-        apiVersion: v1
-        kind: persistentvolumeclaims
-        metadata: { }
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 50G
-          storageClassName: directpv-min-io
+  - servers: 1
+    name: default-pool
+    volumesPerServer: 1
+    volumeClaimTemplate:
+      metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+    storageClassName: nfs-client
+    size: 50Gi
+    containerSecurityContext:
+      runAsUser: 99
+      runAsGroup: 100
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      seccompProfile:
+        type: RuntimeDefault
+
   env: 
     - name: MINIO_DOMAIN
       value: "minio.integratn.tech"
@@ -25,7 +34,19 @@ tenant:
       value: "https://console.integratn.tech"
     - name: MINIO_SERVER_URL
       value: "https://minio.integratn.tech"
-
+  exposeServices:
+    console: false
+    minio: false
+  buckets:
+    - name: default-bucket
+      region: us-home-1
+      objectLock: false
+    - name: terraform-state
+      region: us-home-1
+      objectLock: true
+  features:
+    bucketDNS: true
+  
 ingress:
   api:
     enabled: true
@@ -37,12 +58,13 @@ ingress:
     tls: 
       - hosts:
           - &host minio.integratn.tech
-        secretName: minio-prod-tls
+          - "*.minio.integratn.tech"
+        secretName: minio-tls
     host: *host
     path: /
     pathType: Prefix
   console:
-    enabled: true
+    enabled: false
     ingressClassName: "nginx"
     labels: { }
     annotations: 
@@ -51,6 +73,7 @@ ingress:
     tls: 
       - hosts:
           - &host console.integratn.tech
+
         secretName: minio-prod-tls
     host: *host
     path: /
