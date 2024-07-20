@@ -1,0 +1,46 @@
+tenant:
+  name: default
+  configuration: 
+    name: default-tenant-config
+  pools:
+    - servers: 3
+      name: default-pool
+      size: 50Gi
+      volumesPerServer: 4
+  env: 
+    - name: MINIO_DOMAIN
+      value: "minio.integratn.tech"
+    - name: MINIO_BROWSER_REDIRECT_URL
+      value: "https://console.integratn.tech"
+    - name: MINIO_SERVER_URL
+      value: "https://minio.integratn.tech"
+
+ingress:
+  api:
+    enabled: true
+    ingressClassName: "nginx"
+    labels: { }
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      reloader.stakater.com/auto: "true"
+    tls: 
+      - hosts:
+          - &host minio.integratn.tech
+        secretName: minio-prod-tls
+    host: *host
+    path: /
+    pathType: Prefix
+  console:
+    enabled: true
+    ingressClassName: "nginx"
+    labels: { }
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      reloader.stakater.com/auto: "true"
+    tls: 
+      - hosts:
+          - &host console.integratn.tech
+        secretName: minio-prod-tls
+    host: *host
+    path: /
+    pathType: Prefix
