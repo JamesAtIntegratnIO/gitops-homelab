@@ -7,6 +7,17 @@ tenant:
       name: default-pool
       size: 50Gi
       volumesPerServer: 4
+      volumeClaimTemplate:
+        apiVersion: v1
+        kind: persistentvolumeclaims
+        metadata: { }
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 50G
+          storageClassName: directpv-min-io
   env: 
     - name: MINIO_DOMAIN
       value: "minio.integratn.tech"
