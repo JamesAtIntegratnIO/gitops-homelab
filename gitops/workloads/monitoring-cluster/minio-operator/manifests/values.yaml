@@ -1,0 +1,16 @@
+console:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    labels: { }
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      reloader.stakater.com/auto: "true"
+    tls: 
+      - hosts:
+          - &host operator-console.integratn.tech
+        secretName: minio-prod-tls
+    host: *host
+    path: /
+    pathType: Prefix
