@@ -15,5 +15,6 @@
 #     path: /
 #     pathType: Prefix
 
-# operator:
-#   containerSecurityContext: {}
+operator:
+  image:
+    tag: v6.0.1
