@@ -1,5 +1,5 @@
 {
   "chartName": "tenant",
   "chartRepoURL": "https://operator.min.io",
-  "chartRevision": "6.0.0"
+  "chartRevision": "6.0.1"
 }
