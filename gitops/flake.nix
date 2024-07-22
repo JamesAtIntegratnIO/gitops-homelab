@@ -43,7 +43,7 @@
             source <(helm completion bash)
             source <(argocd completion bash)
             source <(kustomize completion bash)
-            srouce <(talosctl completion bash)
+            source <(talosctl completion bash)
             set +a
             '';
         };

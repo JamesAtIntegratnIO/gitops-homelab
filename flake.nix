@@ -42,6 +42,7 @@
       talosctl
       jq
       yq
+      minio-client
 
       (pkgs.writeShellScriptBin "yolo" ''
           #!/usr/bin/env bash
@@ -63,6 +64,14 @@
               echo "Skipping $dir, no deploy.sh found"
             fi
           done
+        '')
+        (pkgs.writeShellScriptBin "get_secret_data" ''
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          namespace=$1
+          secret_name=$2
+          ${pkgs.kubectl}/bin/kubectl -n "$namespace" get secret "$secret_name" -o json | ${pkgs.jq}/bin/jq -r '.data | map_values(@base64d)'
         '')
       ];
       nativeBuildInputs = with pkgs; [
