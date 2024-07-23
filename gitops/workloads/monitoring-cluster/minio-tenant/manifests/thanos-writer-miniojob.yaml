@@ -44,7 +44,7 @@ spec:
       volumes:
         - name: policy
           configMap:
-            name: mc-logs-writer-policy
+            name: mc-thanos-writer-policy
             items:
               - key: policy.json
                 path: policy.json

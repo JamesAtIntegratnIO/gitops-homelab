@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mc-logs-writer-policy
+  name: mc-thanos-writer-policy
 data:
   policy.json: |
     {
