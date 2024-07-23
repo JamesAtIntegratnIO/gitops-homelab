@@ -1,0 +1,9 @@
+fullname: kube-prometheus-stack
+prometheus:
+  thanosService:
+    enabled: true
+  thanosServiceMonitor:
+    enabled: true
+prometheus-node-exporter:
+  rbac:
+    pspEnabled: true

@@ -40,6 +40,7 @@ locals {
       external_dns_namespace                    = "external-dns"
       cert_manager_namespace                    = "cert-manager"
       nfs_subdir_external_provisioner_namespace = "nfs-provisioner"
+      
     }
   )
 
@@ -52,6 +53,7 @@ locals {
     enable_cert_manager                    = true
     enable_nfs_subdir_external_provisioner = true
     enable_stakater_reloader               = true
+    enable_kube_prometheus_stack           = true
   }
 
 }
