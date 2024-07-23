@@ -4,6 +4,7 @@ kind: ApplicationSet
 metadata:
   name: addons-kube-prometheus-stack
 spec:
+  goTemplate: true
   syncPolicy:
     preserveResourcesOnDeletion: true
   generators:
@@ -14,7 +15,7 @@ spec:
               values:
                 addonChart: kube-prometheus-stack
                 # anything not staging or prod use this version
-                addonChartVersion: 56.21.0
+                addonChartVersion: 61.3.2
                 addonChartRepository: https://prometheus-community.github.io/helm-charts
               selector:
                 matchExpressions:
@@ -29,35 +30,35 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 56.21.0
+                addonChartVersion: 61.3.2
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 56.21.0
+                addonChartVersion: 61.3.2
   template:
     metadata:
-      name: addon-{{name}}-{{values.addonChart}}
+      name: addon-{{.name}}-{{.values.addonChart}}
     spec:
       project: default
       sources:
-        - repoURL: '{{metadata.annotations.addons_repo_url}}'
-          targetRevision: '{{metadata.annotations.addons_repo_revision}}'
+        - repoURL: '{{.metadata.annotations.addons_repo_url}}'
+          targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
           ref: values
-        - chart: '{{values.addonChart}}'
-          repoURL: '{{values.addonChartRepository}}'
-          targetRevision: '{{values.addonChartVersion}}'
+        - chart: '{{.values.addonChart}}'
+          repoURL: '{{.values.addonChartRepository}}'
+          targetRevision: '{{.values.addonChartVersion}}'
           helm:
-            releaseName: '{{values.addonChart}}'
+            releaseName: '{{.values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
               - $values/{{.metadata.annotations.addons_repo_basepath}}charts/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/values.yaml
       destination:
-        namespace: '{{values.addonChart}}'
-        name: '{{name}}'
+        namespace: '{{.values.addonChart}}'
+        name: '{{.name}}'
       syncPolicy:
         automated: {}
         syncOptions:
