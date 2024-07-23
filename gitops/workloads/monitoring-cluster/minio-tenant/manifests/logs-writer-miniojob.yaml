@@ -10,11 +10,26 @@ spec:
     name: default
     namespace: minio-tenant
   commands:
-    - name: add-logs-writer
+    - name: add-logs-writer-user
       op: admin/user/add
       args:
         user: $(USERNAME)
         password: $(PASSWORD)
+      envFrom:
+        - secretRef:
+            name: minio-logs-writer
+    - name: add-logs-writer-group
+      op: admin/group
+      command: 
+        - mc
+        - admin
+        - group 
+        - add 
+        - myminio 
+        - logs-writer 
+        - $(USERNAME)
+      dependsOn:
+        - add-logs-writer-user
       envFrom:
         - secretRef:
             name: minio-logs-writer
@@ -36,10 +51,10 @@ spec:
     - name: logs-writer-policy-attach
       op: admin/policy/attach
       dependsOn:
-        - add-logs-writer
+        - add-logs-writer-group
         - logs-writer-policy-create
       args:
-        user: $(USERNAME)
+        group: logs-writer
         policy: logs-writer-access
       envFrom:
         - secretRef:
