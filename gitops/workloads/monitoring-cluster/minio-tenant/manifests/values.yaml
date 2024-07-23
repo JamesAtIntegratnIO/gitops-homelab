@@ -44,6 +44,9 @@ tenant:
     - name: terraform-state
       region: us-home-1
       objectLock: true
+    - name: logs
+      region: us-home-1
+      objectLock: false
   features:
     bucketDNS: true
   

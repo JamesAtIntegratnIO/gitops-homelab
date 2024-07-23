@@ -1,54 +1,4 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: mc-job-sa
-automountServiceAccountToken: true
 
----
-apiVersion: sts.min.io/v1alpha1
-kind: PolicyBinding
-metadata:
-  name: mc-job-binding
-spec:
-  application:
-    serviceaccount: mc-job-sa
-    namespace: minio-tenant
-  policies:
-    - consoleAdmin
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mc-admin-policy
-data:
-  policy.json: |
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",
-          "Action": [
-            "admin:*"
-          ]
-        },
-        {
-          "Effect": "Allow",
-          "Action": [
-            "kms:*"
-          ]
-        },
-        {
-          "Effect": "Allow",
-          "Action": [
-            "s3:*"
-          ],
-          "Resource": [
-            "arn:aws:s3:::*"
-          ]
-        }
-      ]
-    }
----
 apiVersion: job.min.io/v1alpha1
 kind: MinIOJob
 metadata:
@@ -67,7 +17,7 @@ spec:
         password: $(PASSWORD)
       envFrom:
         - secretRef:
-            name: minio-tenant-user
+            name: minio-admin-user
     - name: admin-policy-create
       op: admin/policy/create
       args:
@@ -93,4 +43,4 @@ spec:
         policy: admin-access
       envFrom:
         - secretRef:
-            name: minio-tenant-user
+            name: minio-admin-user

@@ -1,3 +1,7 @@
 resources:
 - onepasswordItems.yaml
-- jobs.yaml
+- minio-jobs-sa.yaml
+- admin-policy-cm.yaml
+- admin-user-miniojob.yaml
+- logs-writer-policy-cm.yaml
+- logs-writer-miniojob.yaml

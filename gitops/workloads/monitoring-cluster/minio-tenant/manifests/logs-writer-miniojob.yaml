@@ -1,0 +1,46 @@
+
+apiVersion: job.min.io/v1alpha1
+kind: MinIOJob
+metadata:
+  name: minio-logs-writer-creation-job
+  namespace: minio-tenant
+spec:
+  serviceAccountName: mc-job-sa
+  tenant:
+    name: default
+    namespace: minio-tenant
+  commands:
+    - name: add-logs-writer
+      op: admin/user/add
+      args:
+        user: $(USERNAME)
+        password: $(PASSWORD)
+      envFrom:
+        - secretRef:
+            name: minio-logs-writer
+    - name: logs-writer-policy-create
+      op: admin/policy/create
+      args:
+        name: logs-writer-access
+        policy: /temp/policy.json
+      volumeMounts:
+        - name: policy
+          mountPath: /temp
+      volumes:
+        - name: policy
+          configMap:
+            name: mc-logs-writer-policy
+            items:
+              - key: policy.json
+                path: policy.json
+    - name: logs-writer-policy-attach
+      op: admin/policy/attach
+      dependsOn:
+        - add-logs-writer
+        - logs-writer-policy-create
+      args:
+        user: $(USERNAME)
+        policy: logs-writer-access
+      envFrom:
+        - secretRef:
+            name: minio-logs-writer
