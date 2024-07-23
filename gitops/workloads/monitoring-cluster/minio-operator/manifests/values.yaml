@@ -15,6 +15,6 @@
 #     path: /
 #     pathType: Prefix
 
-operator:
-  image:
-    tag: v6.0.1
+# operator:
+#   image:
+#     tag: v6.0.1
