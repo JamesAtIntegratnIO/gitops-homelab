@@ -9,6 +9,7 @@ spec:
   tenant:
     name: default
     namespace: minio-tenant
+  mcImage: quay.io/minio/mc:RELEASE.2024-07-11T18-01-28Z
   commands:
     - name: add-thanos-writer-user
       op: admin/user/add
