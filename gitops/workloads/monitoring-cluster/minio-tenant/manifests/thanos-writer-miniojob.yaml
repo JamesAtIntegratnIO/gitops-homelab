@@ -1,0 +1,61 @@
+
+apiVersion: job.min.io/v1alpha1
+kind: MinIOJob
+metadata:
+  name: minio-thanos-writer-creation-job
+  namespace: minio-tenant
+spec:
+  serviceAccountName: mc-job-sa
+  tenant:
+    name: default
+    namespace: minio-tenant
+  commands:
+    - name: add-thanos-writer-user
+      op: admin/user/add
+      args:
+        user: $(USERNAME)
+        password: $(PASSWORD)
+      envFrom:
+        - secretRef:
+            name: minio-thanos-writer
+    - name: add-thanos-writer-group
+      op: admin/group
+      command: 
+        - mc
+        - admin
+        - group 
+        - add 
+        - myminio 
+        - thanos-writer 
+        - $(USERNAME)
+      dependsOn:
+        - add-thanos-writer-user
+      envFrom:
+        - secretRef:
+            name: minio-thanos-writer
+    - name: thanos-writer-policy-create
+      op: admin/policy/create
+      args:
+        name: thanos-writer-access
+        policy: /temp/policy.json
+      volumeMounts:
+        - name: policy
+          mountPath: /temp
+      volumes:
+        - name: policy
+          configMap:
+            name: mc-logs-writer-policy
+            items:
+              - key: policy.json
+                path: policy.json
+    - name: thanos-writer-policy-attach
+      op: admin/policy/attach
+      dependsOn:
+        - add-thanos-writer-group
+        - thanos-writer-policy-create
+      args:
+        group: thanos-writer
+        policy: thanos-writer-access
+      envFrom:
+        - secretRef:
+            name: minio-thanos-writer

@@ -47,6 +47,9 @@ tenant:
     - name: logs
       region: us-home-1
       objectLock: false
+    - name: thanos
+      region: us-home-1
+      objectLock: false
   features:
     bucketDNS: true
   

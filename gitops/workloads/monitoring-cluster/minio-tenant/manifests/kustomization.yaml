@@ -5,3 +5,5 @@ resources:
 - admin-user-miniojob.yaml
 - logs-writer-policy-cm.yaml
 - logs-writer-miniojob.yaml
+- thanos-writer-policy-cm.yaml
+- thanos-writer-miniojob.yaml
