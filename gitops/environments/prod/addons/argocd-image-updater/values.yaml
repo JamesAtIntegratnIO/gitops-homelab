@@ -1,0 +1,10 @@
+config:
+  registries:
+    - name: GitHub Registry
+      prefix: ghcr.io
+      api_url: https://ghcr.io
+      default: true
+    - name: Docker Hub
+      prefix: docker.io
+      api_url: https://index.docker.io
+      credentials: secret:argocd/argocd-image-updater-secret#dockerhub

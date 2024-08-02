@@ -46,6 +46,7 @@ locals {
 
   addons = {
     enable_argocd                          = true
+    enable_argocd_image_updater            = true
     enable_ingress_nginx                   = true
     enable_metallb                         = true
     enable_op_connect                      = true
