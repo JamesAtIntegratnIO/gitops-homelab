@@ -3,24 +3,39 @@ nodes = {
     name         = "pi-cluster-1"
     create_vm    = false
     controlplane = true
+    networks = [{
+      vlan = 25
+    }]
   }
   "10.0.3.102" = {
     name         = "pi-cluster-2"
     create_vm    = false
     controlplane = true
+    networks = [{
+      vlan = 25
+    }]
   }
   "10.0.3.103" = {
     name         = "pi-cluster-3"
     create_vm    = false
     controlplane = true
+    networks = [{
+      vlan = 25
+    }]
   }
   "10.0.3.104" = {
     name      = "pi-cluster-4"
     create_vm = false
+    networks = [{
+      vlan = 25
+    }]
   }
   "10.0.3.105" = {
     name      = "pi-cluster-5"
     create_vm = false
+    networks = [{
+      vlan = 25
+    }]
   }
   # "10.0.3.106" = {
   #   name             = "pi-cluster-6"

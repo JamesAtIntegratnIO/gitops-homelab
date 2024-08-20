@@ -11,3 +11,11 @@ output "kubeconfig" {
   value     = module.cluster.kubeconfig
   sensitive = true
 }
+
+output "configure_kubectl" {
+  description = "Update your ~/.kube/config with kubecm and switch to the new context"
+  value       = <<EOF
+    kubecm add kubeconfig -f kubeconfig -c
+    kubecm switch admin@${var.cluster_name}
+    EOF
+}

@@ -6,7 +6,7 @@ resource "cloudflare_record" "records" {
   for_each = var.cloudflare_records
   zone_id  = data.cloudflare_zone.zone.id
   name     = each.value.name
-  value    = each.value.value
+  content  = each.value.content
   type     = each.value.type
   ttl      = each.value.ttl
   proxied  = each.value.proxied

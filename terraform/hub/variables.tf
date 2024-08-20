@@ -1,14 +1,24 @@
 variable "nodes" {
   type = map(object({
     name             = string
-    cpu_sockets      = number
-    cpu_cores        = number
-    memory           = number
-    target_node_name = string
-    disk_size        = string
-    macaddr          = string
+    vm_template      = optional(string, "talos-1.7.5-template" )
+    cpu_sockets      = optional(number, 1)
+    cpu_cores        = optional(number, 2)
+    memory           = optional(number, 1024)
+    target_node_name = optional(string, "pve2")
+    disk_size        = optional(string, "32G")
+    # add a list of network objects
+    networks         = optional(list(object({
+      model    = optional(string, "virtio")
+      bridge   = optional(string, "vmbr0")
+      firewall = optional(bool, false)
+      vlan     = optional(string, "-1")
+      macaddr  = optional(string, null)
+    })))
 
     controlplane = optional(bool, false)
+    create_vm    = optional(bool, true)
+    nvidia       = optional(bool, false)
   }))
 }
 ###################################################
@@ -137,7 +147,7 @@ variable "cloudflare_zone_name" {
 variable "cloudflare_records" {
   type = map(object({
     name    = string
-    value   = string
+    content   = string
     type    = string
     ttl     = number
     proxied = bool

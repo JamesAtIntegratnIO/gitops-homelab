@@ -33,12 +33,16 @@ resource "proxmox_vm_qemu" "nodes" {
     id   = 0
     type = "socket"
   }
-
-  network {
-    model    = "virtio"
-    bridge   = "vmbr0"
-    firewall = false
-    macaddr  = each.value.macaddr
+  # add a dynamic block to create the network interfaces
+  dynamic "network" {
+    for_each = each.value.networks
+    content {
+      model    = network.value.model
+      bridge   = network.value.bridge
+      firewall = network.value.firewall
+      macaddr  = network.value.macaddr
+      tag     = network.value.vlan
+    }
   }
 
   boot = "order=scsi0;ide2;net0"
@@ -65,7 +69,7 @@ resource "proxmox_vm_qemu" "nodes" {
   lifecycle {
     ignore_changes = [
       boot,
-      network,
+      # network,
       desc,
       numa,
       agent,

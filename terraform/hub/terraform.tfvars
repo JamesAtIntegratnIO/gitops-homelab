@@ -7,7 +7,12 @@ nodes = {
     cpu_cores        = 2
     memory           = 6144
     controlplane     = true
-    macaddr          = "0a:bc:b0:fc:95:d7"
+    networks = [
+      {
+      macaddr          = "0a:bc:b0:fc:95:d7"
+      vlan             = 25
+      },
+    ]
   }
   "10.0.4.102" = {
     name             = "talos-cp-2"
@@ -17,7 +22,13 @@ nodes = {
     cpu_cores        = 2
     memory           = 6144
     controlplane     = true
-    macaddr          = "da:e2:ee:31:02:6e"
+    networks = [
+      {
+      macaddr          = "da:e2:ee:31:02:6e"
+      vlan             = 25
+      },
+    ]
+    
   }
   "10.0.4.103" = {
     name             = "talos-cp-3"
@@ -27,7 +38,12 @@ nodes = {
     cpu_cores        = 2
     memory           = 6192
     controlplane     = true
-    macaddr          = "7e:08:b4:f9:3b:5e"
+    networks = [
+      {
+      macaddr          = "7e:08:b4:f9:3b:5e"
+      vlan             = 25
+      },
+    ]
   }
   "10.0.4.104" = {
     name             = "talos-w-1"
@@ -36,7 +52,12 @@ nodes = {
     cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
-    macaddr          = "1e:b8:d6:c6:f9:85"
+    networks = [
+      {
+      macaddr          = "1e:b8:d6:c6:f9:85"
+      vlan             = 25
+      },
+    ]
   }
   "10.0.4.105" = {
     name             = "talos-w-2"
@@ -45,7 +66,12 @@ nodes = {
     cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
-    macaddr          = "ee:8b:b0:43:78:9a"
+    networks = [
+      {
+      macaddr          = "ee:8b:b0:43:78:9a"
+      vlan             = 25
+      },
+    ]
   }
   "10.0.4.106" = {
     name             = "talos-w-3"
@@ -54,7 +80,12 @@ nodes = {
     cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
-    macaddr          = "0e:c0:fe:f9:87:07"
+    networks = [
+      {
+      macaddr          = "0e:c0:fe:f9:87:07"
+      vlan             = 25
+      },
+    ]
   }
 }
 
@@ -86,14 +117,14 @@ cloudflare_zone_name = "integratn.tech"
 cloudflare_records = {
   "controlplane" = {
     name    = "controlplane.integratn.tech"
-    value   = "10.0.4.200"
+    content   = "10.0.4.200"
     type    = "A"
     ttl     = 1
     proxied = false
   }
   "star.controlplane" = {
     name    = "*.controlplane.integratn.tech"
-    value   = "10.0.4.200"
+    content   = "10.0.4.200"
     type    = "A"
     ttl     = 1
     proxied = false

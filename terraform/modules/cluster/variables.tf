@@ -7,7 +7,14 @@ variable "nodes" {
     memory           = optional(number, 1024)
     target_node_name = optional(string, "pve2")
     disk_size        = optional(string, "32G")
-    macaddr          = optional(string, "00:00:00:00:00:00")
+    # add a list of network objects
+    networks         = optional(list(object({
+      model    = optional(string, "virtio")
+      bridge   = optional(string, "vmbr0")
+      firewall = optional(bool, false)
+      vlan     = optional(string, "-1")
+      macaddr  = optional(string, null)
+    })))
 
     controlplane = optional(bool, false)
     create_vm    = optional(bool, true)

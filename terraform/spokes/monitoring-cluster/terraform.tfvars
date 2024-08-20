@@ -7,7 +7,12 @@ nodes = {
     cpu_cores        = 4
     memory           = 8192
     controlplane     = true
-    macaddr          = "6a:61:17:7b:2e:6e"
+    networks = [
+      {
+      macaddr          = "6a:61:17:7b:2e:6e"
+      vlan             = 25
+      },
+    ]
   }
   "10.0.5.102" = {
     name             = "monitoring-2"
@@ -17,7 +22,12 @@ nodes = {
     cpu_cores        = 2
     memory           = 8192
     controlplane     = true
-    macaddr          = "ba:95:dd:40:35:1c"
+    networks = [
+      {
+      macaddr          = "ba:95:dd:40:35:1c"
+      vlan             = 25
+      },
+    ]
   }
   "10.0.5.103" = {
     name             = "monitoring-3"
@@ -27,7 +37,12 @@ nodes = {
     cpu_cores        = 2
     memory           = 8192
     controlplane     = true
-    macaddr          = "e6:51:ce:7b:5c:35"
+    networks = [
+      {
+      macaddr          = "e6:51:ce:7b:5c:35"
+      vlan             = 25
+      },
+    ]
   }
 }
 

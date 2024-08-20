@@ -23,14 +23,14 @@ module "cloudflare" {
     "media-cluster" = {
       name    = "media-cluster.integratn.tech"
       type    = "A"
-      value   = "10.0.3.200"
+      content   = "10.0.3.200"
       proxied = false
       ttl     = 1
     }
     "star.media-cluster" = {
       name    = "*.media-cluster.integratn.tech"
       type    = "A"
-      value   = "10.0.3.200"
+      content   = "10.0.3.200"
       proxied = false
       ttl     = 1
     }
@@ -184,68 +184,68 @@ resource "kubernetes_secret" "docker-config" {
   depends_on = [module.hub_cluster]
 }
 
-resource "kubernetes_manifest" "nvidia_runtimeclass" {
-  provider = kubernetes
-  manifest = {
-    apiVersion = "node.k8s.io/v1"
-    kind       = "RuntimeClass"
-    metadata = {
-      name = "nvidia"
-    }
-    handler = "nvidia"
-  }
+# resource "kubernetes_manifest" "nvidia_runtimeclass" {
+#   provider = kubernetes
+#   manifest = {
+#     apiVersion = "node.k8s.io/v1"
+#     kind       = "RuntimeClass"
+#     metadata = {
+#       name = "nvidia"
+#     }
+#     handler = "nvidia"
+#   }
 
-  depends_on = [module.spoke_cluster]
-}
+#   depends_on = [module.spoke_cluster]
+# }
 
-resource "kubernetes_node_taint" "nvidia_gpu_true" {
-  provider = kubernetes
-  for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
+# resource "kubernetes_node_taint" "nvidia_gpu_true" {
+#   provider = kubernetes
+#   for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
 
-  metadata {
-    name = each.value.name
-  }
+#   metadata {
+#     name = each.value.name
+#   }
 
-  taint {
-    key    = "nvidia.com/gpu"
-    value  = "true"
-    effect = "NoSchedule"
-  }
+#   taint {
+#     key    = "nvidia.com/gpu"
+#     value  = "true"
+#     effect = "NoSchedule"
+#   }
 
-  depends_on = [module.spoke_cluster]
-}
+#   depends_on = [module.spoke_cluster]
+# }
 
-resource "kubernetes_node_taint" "nvidia_gpu" {
-  for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
+# resource "kubernetes_node_taint" "nvidia_gpu" {
+#   for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
 
-  metadata {
-    name = each.value.name
-  }
+#   metadata {
+#     name = each.value.name
+#   }
 
-  taint {
-    key    = "nvidia.com/gpu"
-    value  = ""
-    effect = "NoSchedule"
-  }
+#   taint {
+#     key    = "nvidia.com/gpu"
+#     value  = ""
+#     effect = "NoSchedule"
+#   }
 
-  depends_on = [module.spoke_cluster]
-}
+#   depends_on = [module.spoke_cluster]
+# }
 
 
-resource "kubernetes_node_taint" "nvidia_gpu_present" {
-  provider = kubernetes
-  for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
+# resource "kubernetes_node_taint" "nvidia_gpu_present" {
+#   provider = kubernetes
+#   for_each = { for key, value in var.nodes : key => value if lookup(value, "nvidia", false) == true }
 
-  metadata {
-    name = each.value.name
-  }
+#   metadata {
+#     name = each.value.name
+#   }
 
-  taint {
-    key    = "nvidia.com/gpu"
-    value  = "present"
-    effect = "NoSchedule"
-  }
+#   taint {
+#     key    = "nvidia.com/gpu"
+#     value  = "present"
+#     effect = "NoSchedule"
+#   }
 
-  depends_on = [module.spoke_cluster]
+#   depends_on = [module.spoke_cluster]
 
-}
+# }

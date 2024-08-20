@@ -24,14 +24,14 @@ module "cloudflare" {
     "monitoring-cluster" = {
       name    = "monitoring.integratn.tech"
       type    = "A"
-      value   = "10.0.5.200"
+      content   = "10.0.5.200"
       proxied = false
       ttl     = 1
     }
     "star.monitoring-cluster" = {
       name    = "*.monitoring.integratn.tech"
       type    = "A"
-      value   = "10.0.5.200"
+      content   = "10.0.5.200"
       proxied = false
       ttl     = 1
     }

@@ -18,13 +18,13 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.37.0"
+      version = "4.39.0"
     }
   }
 }
 
 provider "proxmox" {
-  pm_api_url = "https://10.0.0.9:8006/api2/json"
+  pm_api_url = "https://192.168.0.10:8006/api2/json"
   # set PM_USER and PM_PASS in your environment
 }
 
