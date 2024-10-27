@@ -1,10 +1,10 @@
 nodes = {
   "10.0.4.101" = {
-    name             = "talos-cp-1"
-    target_node_name = "pve2"
+    name             = "controlplane-cluster-1"
+    target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
-    cpu_cores        = 2
+    cpu_cores        = 4
     memory           = 6144
     controlplane     = true
     networks = [
@@ -15,11 +15,11 @@ nodes = {
     ]
   }
   "10.0.4.102" = {
-    name             = "talos-cp-2"
+    name             = "controlplane-cluster-2"
     target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
-    cpu_cores        = 2
+    cpu_cores        = 4
     memory           = 6144
     controlplane     = true
     networks = [
@@ -31,58 +31,16 @@ nodes = {
     
   }
   "10.0.4.103" = {
-    name             = "talos-cp-3"
+    name             = "controlplane-cluster-3"
     target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
-    cpu_cores        = 2
+    cpu_cores        = 4
     memory           = 6192
     controlplane     = true
     networks = [
       {
       macaddr          = "7e:08:b4:f9:3b:5e"
-      vlan             = 25
-      },
-    ]
-  }
-  "10.0.4.104" = {
-    name             = "talos-w-1"
-    target_node_name = "pve2"
-    disk_size        = "32G"
-    cpu_sockets      = 1
-    cpu_cores        = 4
-    memory           = 8192
-    networks = [
-      {
-      macaddr          = "1e:b8:d6:c6:f9:85"
-      vlan             = 25
-      },
-    ]
-  }
-  "10.0.4.105" = {
-    name             = "talos-w-2"
-    target_node_name = "pve2"
-    disk_size        = "32G"
-    cpu_sockets      = 1
-    cpu_cores        = 4
-    memory           = 8192
-    networks = [
-      {
-      macaddr          = "ee:8b:b0:43:78:9a"
-      vlan             = 25
-      },
-    ]
-  }
-  "10.0.4.106" = {
-    name             = "talos-w-3"
-    target_node_name = "pve"
-    disk_size        = "32G"
-    cpu_sockets      = 1
-    cpu_cores        = 4
-    memory           = 8192
-    networks = [
-      {
-      macaddr          = "0e:c0:fe:f9:87:07"
       vlan             = 25
       },
     ]
@@ -95,7 +53,7 @@ gateway             = "10.0.0.1"
 cluster_endpoint_ip = "10.0.4.100"
 nameservers         = ["1.1.1.1", "10.0.0.1"]
 
-proxmox_image   = "local:iso/talos-metal-qemu-1.7.5.iso"
+proxmox_image   = "local:iso/Talos-1.8.1-proxmox-qemu.iso"
 proxmox_storage = "local-zfs"
 
 cluster_name = "controlplane-cluster"

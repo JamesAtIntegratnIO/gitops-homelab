@@ -14,7 +14,7 @@ resource "proxmox_vm_qemu" "nodes" {
   # ipconfig0              = "ip=${each.key}/${var.cidr},gw=${var.gateway}"
 
   onboot  = false
-  cpu     = "host,flags=+aes"
+  cpu     = "host"
   sockets = each.value.cpu_sockets
   cores   = each.value.cpu_cores
   memory  = each.value.memory
@@ -60,6 +60,8 @@ resource "proxmox_vm_qemu" "nodes" {
         disk {
           size    = each.value.disk_size
           storage = var.proxmox_storage
+          cache   = coalesce(each.value.disk_cache, var.disk_cache ,"unsafe")
+          emulatessd = coalesce(each.value.emulatessd, var.emulatessd, true)
         }
       }
     }

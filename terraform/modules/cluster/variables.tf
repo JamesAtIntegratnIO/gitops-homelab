@@ -7,6 +7,8 @@ variable "nodes" {
     memory           = optional(number, 1024)
     target_node_name = optional(string, "pve2")
     disk_size        = optional(string, "32G")
+    emulatessd       = optional(bool, true)
+    disk_cache       = optional(string, "unsafe")
     # add a list of network objects
     networks         = optional(list(object({
       model    = optional(string, "virtio")
@@ -55,6 +57,16 @@ variable "gateway" {
 variable "proxmox_storage" {
   type    = string
   default = "local-zfs"
+}
+
+variable "disk_cache" {
+  type    = string
+  default = "unsafe"
+}
+
+variable "emulatessd" {
+  type    = bool
+  default = true
 }
 
 variable "tags" {

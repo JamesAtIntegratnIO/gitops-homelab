@@ -2,6 +2,7 @@ module "cluster" {
   source = "../modules/cluster"
 
   nodes               = var.nodes
+  vm_template         = var.vm_template
   ip_base             = var.ip_base
   cidr                = var.cidr
   gateway             = var.gateway
