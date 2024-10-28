@@ -27,3 +27,10 @@ spec:
           nfs:
             server: 10.0.0.12
             path: /mnt/user/kube_storage
+            mountOptions:
+              - rw
+              - hard
+              - nfsvers=4
+              - noatime
+              - rsize=1048576
+              - wsize=1048576
