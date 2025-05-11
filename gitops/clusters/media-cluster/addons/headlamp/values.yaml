@@ -1,0 +1,7 @@
+ingress:
+  hosts:
+    - host: headlamp.media-cluster.integratn.tech
+  tls:
+    - secretName: headlamp-tls
+      hosts:
+        - headlamp.media-cluster.integratn.tech
