@@ -1,0 +1,3 @@
+webhook:
+  securePort: 10260
+  hostNetwork: true
