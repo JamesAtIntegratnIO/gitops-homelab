@@ -12,3 +12,5 @@ controller:
   podAnnotations:
     prometheus.io/port: "10254"
     prometheus.io/scrape: "true"
+rbac:
+  create: true

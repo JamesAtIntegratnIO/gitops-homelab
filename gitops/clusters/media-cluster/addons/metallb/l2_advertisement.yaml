@@ -3,3 +3,8 @@ kind: L2Advertisement
 metadata:
   name: default
   namespace: metallb-system
+spec:
+  interfaces:
+    - name: eth0
+  ipAddressPools:
+    - default
