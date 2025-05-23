@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: addons-seaweedfs
+  name: addons-rook-ceph
 spec:
   goTemplate: true
   syncPolicy:
@@ -13,16 +13,16 @@ spec:
         generators:
           - clusters:
               values:
-                addonChart: seaweedfs
+                addonChart: rook-ceph
                 # anything not staging or prod use this version
-                addonChartVersion: 4.0.387
-                addonChartRepository: https://seaweedfs.github.io/seaweedfs/helm
+                addonChartVersion: 1.17.2
+                addonChartRepository: https://charts.rook.io/release
               selector:
                 matchExpressions:
                   - key: akuity.io/argo-cd-cluster-name
                     operator: NotIn
                     values: [in-cluster]
-                  - key: enable_seaweedfs
+                  - key: enable_rook_ceph
                     operator: In
                     values: ['true']
           - clusters:
@@ -30,13 +30,13 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 4.0.387
+                addonChartVersion: 1.17.2
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 4.0.387
+                addonChartVersion: 1.17.2
   template:
     metadata:
       name: addon-{{.name}}-{{.values.addonChart}}
@@ -61,7 +61,7 @@ spec:
           targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
           path: '{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/'
       destination:
-        namespace: 'operator'
+        namespace: 'rook-ceph'
         name: '{{.name}}'
       syncPolicy:
         automated: {}
