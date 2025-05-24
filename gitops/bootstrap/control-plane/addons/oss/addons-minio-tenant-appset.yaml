@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: addons-minio-tenatn
+  name: addons-minio-tenant
 spec:
   goTemplate: true
   syncPolicy:
@@ -61,7 +61,7 @@ spec:
           targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
           path: '{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/minio-{{.values.addonChart}}/'
       destination:
-        namespace: 'minio-operator'
+        namespace: 'minio-tenant'
         name: '{{.name}}'
       syncPolicy:
         automated: {}
