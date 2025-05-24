@@ -16,13 +16,13 @@ spec:
                 addonChart: operator
                 # anything not staging or prod use this version
                 addonChartVersion: 6.0.1
-                addonChartRepository: https://minio-operator.github.io/minio-operator/helm
+                addonChartRepository: https://operator.min.io
               selector:
                 matchExpressions:
                   - key: akuity.io/argo-cd-cluster-name
                     operator: NotIn
                     values: [in-cluster]
-                  - key: enable_minio-operator
+                  - key: enable_minio_operator
                     operator: In
                     values: ['true']
           - clusters:
