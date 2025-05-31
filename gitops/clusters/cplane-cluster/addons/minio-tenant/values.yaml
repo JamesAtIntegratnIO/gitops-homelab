@@ -1,3 +1,5 @@
+# Workaround for secrets bug https://github.com/minio/operator/issues/2255
+secrets: ~
 # Root key for MinIO Tenant Chart
 tenant:
   ###
