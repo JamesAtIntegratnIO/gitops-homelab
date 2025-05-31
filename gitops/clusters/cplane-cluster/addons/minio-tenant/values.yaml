@@ -226,7 +226,7 @@ tenant:
   ###
   # Configures a Prometheus-compatible scraping endpoint at the specified port.
   metrics:
-    enabled: false
+    enabled: true
     port: 9000
     protocol: http
   ###
@@ -322,13 +322,15 @@ tenant:
   # - Specify ``console: true`` to expose the Console.
   #
   # Both fields default to ``false``.
-  exposeServices: { }
+  exposeServices: 
+    minio: true
+    console: true
   ###
   # The `Kubernetes Service Account <https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/>`__ associated with the Tenant.
   serviceAccountName: ""
   ###
   # Directs the Operator to add the Tenant's metric scrape configuration to an existing Kubernetes Prometheus deployment managed by the Prometheus Operator.
-  prometheusOperator: false
+  prometheusOperator: true
   ###
   # Configure pod logging configuration for the MinIO Tenant.
   #
@@ -477,11 +479,13 @@ tenant:
 # Set the keys to conform to the Ingress controller and configuration of your choice.
 ingress:
   api:
-    enabled: false
+    enabled: true
     ingressClassName: nginx
     labels: { }
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/upstream-vhost: minio
+      nginx.ingress.kubernetes.io/backend-protocol: https
     tls:
       - hosts:
           - minio.cp.integratn.tech
@@ -490,11 +494,13 @@ ingress:
     path: /
     pathType: Prefix
   console:
-    enabled: false
-    ingressClassName: ""
+    enabled: true
+    ingressClassName: nginx
     labels: { }
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/upstream-vhost: minio
+      nginx.ingress.kubernetes.io/backend-protocol: https
     tls:
       - hosts:
           - minio-console.cp.integratn.tech
