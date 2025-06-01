@@ -330,7 +330,7 @@ tenant:
   serviceAccountName: ""
   ###
   # Directs the Operator to add the Tenant's metric scrape configuration to an existing Kubernetes Prometheus deployment managed by the Prometheus Operator.
-  prometheusOperator: true
+  prometheusOperator: false
   ###
   # Configure pod logging configuration for the MinIO Tenant.
   #

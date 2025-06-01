@@ -1,0 +1,6 @@
+namespace: k0s-media-cluster
+resources:
+  - namespace.yaml
+  - controlplane.yaml
+  - remote-cluster.yaml
+  - media-cluster.yaml

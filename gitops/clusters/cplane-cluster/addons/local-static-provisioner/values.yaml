@@ -89,7 +89,7 @@ classes:
     # Uncomment to create storage class object and configure it.
     storageClass:
       reclaimPolicy: Delete # Available reclaim policies: Delete/Retain, defaults: Delete.
-      isDefaultClass: true # set as default class
+      isDefaultClass: false # set as default class
       volumeBindingMode: Immediate # Available volume binding modes: Immediate/WaitForFirstConsumer, defaults: Immediate.
       # If you are using cluster autoscaler to scale the workload using volume provisioned by this storage class,
       # set the provisioner of the storage class to another value other than the default.

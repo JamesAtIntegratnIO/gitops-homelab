@@ -43,6 +43,7 @@
       jq
       yq
       minio-client
+      clusterctl
 
       (pkgs.writeShellScriptBin "yolo" ''
           #!/usr/bin/env bash
