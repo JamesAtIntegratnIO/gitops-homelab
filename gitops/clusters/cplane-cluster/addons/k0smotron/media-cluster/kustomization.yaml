@@ -1,9 +1,12 @@
-namespace: k0s-media-cluster
+namespace: k0smotron
 resources:
-  - namespace.yaml
+  # - namespace.yaml
   - controlplane.yaml
+  # - k0scontrolplane.yaml
+  # - pooled-remote-machines.yaml
   - remote-cluster.yaml
   - media-cluster.yaml
   - sshkey-secret.yaml
   - media-cluster-worker1.yaml
   - media-cluster-worker2.yaml
+  # - media-cluster-worker3.yaml

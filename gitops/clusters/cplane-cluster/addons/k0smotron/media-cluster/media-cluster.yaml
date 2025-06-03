@@ -3,7 +3,7 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
   name: media-cluster
-  namespace: k0s-media-cluster
+  namespace: k0smotron
 spec:
   clusterNetwork:
     pods:
@@ -17,8 +17,11 @@ spec:
     apiVersion: controlplane.cluster.x-k8s.io/v1beta1
     kind: K0smotronControlPlane
     name: media-cluster
+    namespace: k0smotron
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     kind: RemoteCluster
     name: media-cluster
+    namespace: k0smotron
+  
   
