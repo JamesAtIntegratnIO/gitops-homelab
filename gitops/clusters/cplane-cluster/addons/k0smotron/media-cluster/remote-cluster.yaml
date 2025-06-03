@@ -3,4 +3,3 @@ kind: RemoteCluster
 metadata:
   name: media-custer
   namespace: k0s-media-cluster
-spec:

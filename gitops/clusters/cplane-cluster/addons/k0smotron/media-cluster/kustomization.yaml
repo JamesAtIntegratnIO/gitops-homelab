@@ -4,3 +4,6 @@ resources:
   - controlplane.yaml
   - remote-cluster.yaml
   - media-cluster.yaml
+  - sshkey-secret.yaml
+  - media-cluster-worker1.yaml
+  - media-cluster-worker2.yaml
