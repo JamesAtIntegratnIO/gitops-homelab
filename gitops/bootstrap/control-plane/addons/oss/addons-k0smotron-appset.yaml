@@ -12,6 +12,11 @@ spec:
         mergeKeys: [server]
         generators:
           - clusters:
+              values:
+                name: k0smotron
+                CAPIaddonChart: cluster-api-operator
+                CAPIaddonChartVersion: 0.20.0
+                CAPIaddonChartRepository: https://kubernetes-sigs.github.io/cluster-api-operator
               selector:
                 matchExpressions:
                   - key: akuity.io/argo-cd-cluster-name
@@ -24,14 +29,10 @@ spec:
               selector:
                 matchLabels:
                   environment: staging
-              values:
-                name: k0smotron
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
-              values:
-                name: k0smotron
 
   template:
     metadata:
@@ -39,6 +40,18 @@ spec:
     spec:
       project: default
       sources:
+        - chart: '{{.values.CAPIaddonChart}}'
+          repoURL: '{{.values.CAPIaddonChartRepository}}'
+          targetRevision: '{{.values.CAPIaddonChartVersion}}'
+          # FOR CAPI
+          helm:
+            releaseName: '{{.values.CAPIaddonChart}}'
+            ignoreMissingValueFiles: true
+            valueFiles:
+              - $values/{{.metadata.annotations.addons_repo_basepath}}charts/addons/{{.values.name}}/{{.values.CAPIaddonChart}}/values.yaml
+              - $values/{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.name}}/{{.values.CAPIaddonChart}}/values.yaml
+              - $values/{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.name}}/{{.values.CAPIaddonChart}}/values.yaml
+        # FOR K0SMOTRON
         - repoURL: '{{.metadata.annotations.addons_repo_url}}'
           targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
           path: '{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.name}}'
