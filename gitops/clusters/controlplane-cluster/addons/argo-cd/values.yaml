@@ -3,4 +3,4 @@ global:
 server:
   service:
     annotations:
-      metallb.universe.tf/loadBalancerIPs: 10.0.4.201
+      metallb.universe.tf/loadBalancerIPs: 10.0.5.201

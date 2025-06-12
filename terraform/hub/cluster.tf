@@ -12,8 +12,9 @@ module "cluster" {
   proxmox_storage     = var.proxmox_storage
   cluster_name        = var.cluster_name
   extra_manifests     = var.extra_manifests
+  install_disk        = var.install_disk
   
-  allow_scheduling_on_controlplane = true
+  allow_scheduling_on_controlplane = var.allow_scheduling_on_controlplane
 
 }
 

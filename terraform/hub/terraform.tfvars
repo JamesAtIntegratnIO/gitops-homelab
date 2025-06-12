@@ -1,63 +1,48 @@
 nodes = {
-  "10.0.4.101" = {
-    name             = "controlplane-cluster-1"
-    target_node_name = "pve"
-    disk_size        = "32G"
-    cpu_sockets      = 1
-    cpu_cores        = 4
-    memory           = 6144
+  "10.0.5.101" = {
+    name             = "talos-controlplane-1"
+    create_vm        = false
     controlplane     = true
     networks = [
       {
-      macaddr          = "0a:bc:b0:fc:95:d7"
       vlan             = 25
       },
     ]
   }
-  "10.0.4.102" = {
-    name             = "controlplane-cluster-2"
-    target_node_name = "pve"
-    disk_size        = "32G"
-    cpu_sockets      = 1
-    cpu_cores        = 4
-    memory           = 6144
+  "10.0.5.102" = {
+    name             = "talos-controlplane-2"
+    create_vm        = false
     controlplane     = true
     networks = [
       {
-      macaddr          = "da:e2:ee:31:02:6e"
       vlan             = 25
       },
     ]
     
   }
-  "10.0.4.103" = {
-    name             = "controlplane-cluster-3"
-    target_node_name = "pve"
-    disk_size        = "32G"
-    cpu_sockets      = 1
-    cpu_cores        = 4
-    memory           = 6192
+  "10.0.5.103" = {
+    name             = "talos-controlplane-3"
+    create_vm        = false
     controlplane     = true
     networks = [
       {
-      macaddr          = "7e:08:b4:f9:3b:5e"
       vlan             = 25
       },
     ]
   }
 }
 
-ip_base             = "10.0.4.0"
+ip_base             = "10.0.5.0"
 cidr                = 9
 gateway             = "10.0.0.1"
-cluster_endpoint_ip = "10.0.4.100"
+cluster_endpoint_ip = "10.0.5.100"
 nameservers         = ["1.1.1.1", "10.0.0.1"]
 
-proxmox_image   = "local:iso/Talos-1.8.1-proxmox-qemu.iso"
-proxmox_storage = "local-zfs"
 
-cluster_name = "controlplane-cluster"
+cluster_name = "cp-cluster"
 allow_scheduling_on_controlplane = true
+
+install_disk = "/dev/nvme0n1"
 
 gitops_addons_org = "https://github.com/jamesatintegratnio"
 gitops_addons_repo = "gitops-homelab"
@@ -75,14 +60,14 @@ cloudflare_zone_name = "integratn.tech"
 cloudflare_records = {
   "controlplane" = {
     name    = "controlplane.integratn.tech"
-    content   = "10.0.4.200"
+    content   = "10.0.5.200"
     type    = "A"
     ttl     = 1
     proxied = false
   }
   "star.controlplane" = {
     name    = "*.controlplane.integratn.tech"
-    content   = "10.0.4.200"
+    content   = "10.0.5.200"
     type    = "A"
     ttl     = 1
     proxied = false
