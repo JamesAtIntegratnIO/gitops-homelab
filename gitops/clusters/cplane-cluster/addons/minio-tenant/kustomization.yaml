@@ -1,0 +1,2 @@
+resources:
+  - minio-storage-configuration-secret.yaml
