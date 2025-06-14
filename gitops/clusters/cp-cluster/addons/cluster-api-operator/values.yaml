@@ -7,18 +7,18 @@ core:
 #   version: ""           # Optional
 #   createNamespace: true # Optional
 bootstrap: 
-  talos: {}           # Name, required
+  k0sproject-k0smotron: {}           # Name, required
 #   namespace: ""         # Optional
 #   version: ""           # Optional
 #   createNamespace: true # Optional
 controlPlane: 
-  talos: {}           # Name, required
+  k0sproject-k0smotron: {}           # Name, required
 # kubeadm: {}             # Name, required
 #   namespace: ""         # Optional
 #   version: ""           # Optional
 #   createNamespace: true # Optional
 infrastructure: 
-  sidero: {}           # Name, required
+  k0sproject-k0smotron: {}           # Name, required
 # docker: {}              # Name, required
 #   namespace: ""         # Optional
 #   version: ""           # Optional
