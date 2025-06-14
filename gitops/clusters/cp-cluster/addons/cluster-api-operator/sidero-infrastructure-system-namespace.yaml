@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sidero-infrastructure-system
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    kubernetes.io/metadata.name: sidero-infrastructure-system

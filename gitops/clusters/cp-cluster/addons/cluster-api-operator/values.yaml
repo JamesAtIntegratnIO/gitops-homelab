@@ -18,7 +18,9 @@ controlPlane:
 #   version: ""           # Optional
 #   createNamespace: true # Optional
 infrastructure: 
-  sidero: {}           # Name, required
+  sidero:           # Name, required
+    namespace: sidero-infrastructure-system
+    createNamespace: false
 # docker: {}              # Name, required
 #   namespace: ""         # Optional
 #   version: ""           # Optional
