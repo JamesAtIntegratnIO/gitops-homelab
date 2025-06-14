@@ -56,7 +56,7 @@ leaderElection:
 image:
   manager:
     repository: gcr.io/k8s-staging-capi-operator/cluster-api-operator
-    tag: dev
+    tag: v0.20.0
     pullPolicy: IfNotPresent
 env:
   manager: []
