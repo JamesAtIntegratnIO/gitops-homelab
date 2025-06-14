@@ -1,8 +1,0 @@
-connect:
-  ingress:
-    hosts:
-      - host: op-connect.controlplane.integratn.tech
-    tls:
-      - secretName: op-connect-tls
-        hosts:
-          - op-connect.controlplane.integratn.tech

@@ -33,6 +33,9 @@
             k9s
             talosctl
             kubecm
+
+            jq
+            yq
           
           ];
 
