@@ -23,20 +23,7 @@ nodes = {
       vlan = 25
     }]
   }
-  "10.0.3.104" = {
-    name      = "pi-cluster-4"
-    create_vm = false
-    networks = [{
-      vlan = 25
-    }]
-  }
-  "10.0.3.105" = {
-    name      = "pi-cluster-5"
-    create_vm = false
-    networks = [{
-      vlan = 25
-    }]
-  }
+
   # "10.0.3.106" = {
   #   name             = "pi-cluster-6"
   #   create_vm        = true

@@ -6,7 +6,7 @@ terraform {
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.7.0"
+      version = "0.8.1"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -14,7 +14,7 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.10.1"
+      version = "= 2.10.1"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"

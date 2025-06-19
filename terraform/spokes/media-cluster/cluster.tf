@@ -23,14 +23,14 @@ module "cloudflare" {
   cloudflare_zone_name = var.cloudflare_zone_name
   cloudflare_records = {
     "media-cluster" = {
-      name    = "media-cluster.integratn.tech"
+      name    = "mc.integratn.tech"
       type    = "A"
       content   = "10.0.3.200"
       proxied = false
       ttl     = 1
     }
     "star.media-cluster" = {
-      name    = "*.media-cluster.integratn.tech"
+      name    = "*.mc.integratn.tech"
       type    = "A"
       content   = "10.0.3.200"
       proxied = false

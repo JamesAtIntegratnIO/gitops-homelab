@@ -3,5 +3,5 @@
 controller:
   service:
     annotations:
-      metallb.universe.tf/loadBalancerIPs: 10.0.6.200
+      metallb.universe.tf/loadBalancerIPs: 10.0.3.200
 
