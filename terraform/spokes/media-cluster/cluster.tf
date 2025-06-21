@@ -78,7 +78,7 @@ locals {
       addons_repo_basepath = local.gitops_addons_basepath
       addons_repo_path     = local.gitops_addons_path
       addons_repo_revision = local.gitops_addons_revision
-      managed-by          = "argocd.argoproj.io"
+      managed-by           = "argocd.argoproj.io"
     },
     {
       external_dns_namespace                    = "external-dns"

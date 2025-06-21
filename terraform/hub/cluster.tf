@@ -30,6 +30,7 @@ locals {
   gitops_addons_basepath = var.gitops_addons_basepath
   gitops_addons_path     = var.gitops_addons_path
   gitops_addons_revision = var.gitops_addons_revision
+  
 
   addons_metadata = merge(
     {
@@ -37,6 +38,7 @@ locals {
       addons_repo_basepath = local.gitops_addons_basepath
       addons_repo_path     = local.gitops_addons_path
       addons_repo_revision = local.gitops_addons_revision
+      managed-by           = "argocd.argoproj.io"
     },
     {
       external_dns_namespace                    = "external-dns"
@@ -58,6 +60,8 @@ locals {
     enable_stakater_reloader               = true
     enable_kube_prometheus_stack           = true
     enable_cluster_api_operator            = true
+    enable_external_secrets                = true
+    enable_headlamp                        = true
   }
 
 }

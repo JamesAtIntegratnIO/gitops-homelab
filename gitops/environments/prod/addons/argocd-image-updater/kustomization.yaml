@@ -1,2 +1,2 @@
 resources:
-  - argocd-image-updater-secret.yaml
+  - externalSecrets.yaml
