@@ -23,14 +23,14 @@ module "cloudflare" {
   cloudflare_zone_name = var.cloudflare_zone_name
   cloudflare_records = {
     "media-cluster" = {
-      name    = "mc.integratn.tech"
+      name    = "media-cluster.integratn.tech"
       type    = "A"
       content   = "10.0.3.200"
       proxied = false
       ttl     = 1
     }
     "star.media-cluster" = {
-      name    = "*.mc.integratn.tech"
+      name    = "*.media-cluster.integratn.tech"
       type    = "A"
       content   = "10.0.3.200"
       proxied = false
@@ -78,6 +78,7 @@ locals {
       addons_repo_basepath = local.gitops_addons_basepath
       addons_repo_path     = local.gitops_addons_path
       addons_repo_revision = local.gitops_addons_revision
+      managed-by          = "argocd.argoproj.io"
     },
     {
       external_dns_namespace                    = "external-dns"
@@ -111,6 +112,7 @@ locals {
       enable_stakater_reloader               = true
       enable_kube_prometheus_stack           = true
       enable_headlamp                        = true
+      enable_external_secrets                = true
     },
   )
 }
