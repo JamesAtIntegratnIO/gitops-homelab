@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: cert-manager
 
 resources:
-- onepassword-item.yaml
+- externalSecrets.yaml
