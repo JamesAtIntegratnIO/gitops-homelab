@@ -40,10 +40,9 @@ module "cloudflare" {
 }
 
 data "terraform_remote_state" "hub" {
-  backend = "local"
-
+  backend = "pg"
   config = {
-    path = "../../hub/terraform.tfstate"
+    conn_str = "postgres://10.0.3.1/terraform_state"
   }
 }
 
@@ -105,7 +104,6 @@ locals {
       enable_argocd_image_updater            = true
       enable_ingress_nginx                   = true
       enable_metallb                         = true
-      enable_op_connect                      = true
       enable_external_dns                    = true
       enable_cert_manager                    = true
       enable_nfs_subdir_external_provisioner = true
@@ -146,7 +144,7 @@ module "hub_cluster" {
     EOT
   }
 
-  depends_on = [time_sleep.wait_for_cluster, kubernetes_secret.onepassword_token]
+  depends_on = [time_sleep.wait_for_cluster]
 }
 
 module "spoke_cluster" {

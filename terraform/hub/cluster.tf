@@ -53,7 +53,6 @@ locals {
     enable_argocd_image_updater            = true
     enable_ingress_nginx                   = true
     enable_metallb                         = true
-    enable_op_connect                      = true
     enable_external_dns                    = true
     enable_cert_manager                    = true
     enable_nfs_subdir_external_provisioner = true

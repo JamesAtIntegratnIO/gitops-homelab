@@ -75,6 +75,24 @@ resource "talos_machine_bootstrap" "this" {
   node                 = [for k, v in var.nodes : k if v.controlplane == true][0]
 }
 
+data "onepassword_vault" "vault" {
+  name = var.one_password_vault
+}
+
+resource "onepassword_item" "talosconfig" {
+  vault = data.onepassword_vault.vault.uuid
+
+  title    = "${var.cluster_name}-talosconfig"
+  category = "secure_note"
+
+  note_value = data.talos_client_configuration.this.talos_config
+
+  tags = [
+    var.cluster_name,
+    "talosconfig",
+  ]
+}
+
 resource "local_file" "talosconfig" {
   content  = data.talos_client_configuration.this.talos_config
   filename = "${path.root}/talosconfig"
@@ -87,6 +105,19 @@ data "talos_cluster_kubeconfig" "this" {
   timeouts = {
     read = "30m"
   }
+}
+
+resource "onepassword_item" "kubeconfig" {
+  vault = data.onepassword_vault.vault.uuid
+  title = "${var.cluster_name}-kubeconfig"
+  category = "secure_note"
+
+  note_value = data.talos_cluster_kubeconfig.this.kubeconfig_raw
+
+  tags = [
+    var.cluster_name,
+    "kubeconfig",
+  ]
 }
 
 resource "local_file" "kubeconfig" {

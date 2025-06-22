@@ -62,3 +62,5 @@ gitops_workload_path     = "workloads"
 gitops_workload_revision = "main"
 gitops_workload_repo     = "gitops-homelab-private.git"
 gitops_workload_org      = "git@github.com:JamesAtIntegratnIO"
+
+skip_cluster_wait = true

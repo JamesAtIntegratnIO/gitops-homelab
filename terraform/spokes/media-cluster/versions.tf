@@ -1,4 +1,7 @@
 terraform {
+  backend "pg" {
+    conn_str = "postgres://10.0.3.1/terraform_media_cluster"
+  }
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
@@ -20,6 +23,11 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.39.0"
     }
+    onepassword = {
+      source  = "1Password/onepassword"
+      version = ">= 2.1.2"
+    }
+
   }
 }
 
@@ -56,4 +64,9 @@ provider "helm" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_key
+}
+
+provider "onepassword" {
+  url                   = "https://connect.integratn.tech"
+  token                 = var.onepassword_token
 }

@@ -73,3 +73,5 @@ cloudflare_records = {
     proxied = false
   }
 }
+
+skip_cluster_wait = true

@@ -111,3 +111,8 @@ variable "allow_scheduling_on_controlplane" {
   type    = bool
   default = false
 }
+
+variable "one_password_vault" {
+  type    = string
+  default = "homelab"
+}
