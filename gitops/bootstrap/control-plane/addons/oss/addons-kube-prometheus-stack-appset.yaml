@@ -52,10 +52,48 @@ spec:
           helm:
             releaseName: '{{.values.addonChart}}'
             ignoreMissingValueFiles: true
+            
             valueFiles:
               - $values/{{.metadata.annotations.addons_repo_basepath}}charts/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/values.yaml
+            valuesObject: 
+              alertmanager:
+                ingress:
+                  enabled: true
+                  ingressClassName: nginx
+                  annotations:
+                    cert-manager.io/cluster-issuer: letsencrypt-prod
+                  hosts:
+                    - alertmanager.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
+                  tls:
+                    - secretName: alertmanager-{{.name}}-tls
+                      hosts:
+                        - alertmanager.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
+              grafana:
+                ingress:
+                  enabled: true
+                  ingressClassName: nginx
+                  annotations:
+                    cert-manager.io/cluster-issuer: letsencrypt-prod
+                  hosts:
+                    - grafana.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
+                  tls:
+                    - secretName: grafana-{{.name}}-tls
+                      hosts:
+                        - grafana.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
+              prometheus:
+                ingress:
+                  enabled: true
+                  ingressClassName: nginx
+                  annotations:
+                    cert-manager.io/cluster-issuer: letsencrypt-prod
+                  hosts:
+                    - prometheus.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
+                  tls:
+                    - secretName: prometheus-{{.name}}-tls
+                      hosts:
+                        - prometheus.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
       destination:
         namespace: '{{.values.addonChart}}'
         name: '{{.name}}'
