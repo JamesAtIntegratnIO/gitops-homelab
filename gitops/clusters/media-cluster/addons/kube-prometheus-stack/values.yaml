@@ -1,4 +1,3 @@
-# Helm chart values
 # Default values for kube-prometheus-stack.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -391,7 +390,7 @@ alertmanager:
 
   ## Deploy alertmanager
   ##
-  enabled: true
+  enabled: false
 
   # Optional: Override the namespace where Alertmanager will be deployed.
   namespaceOverride: ""
@@ -1217,7 +1216,7 @@ alertmanager:
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
-  enabled: true
+  enabled: false
   namespaceOverride: ""
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
@@ -4124,12 +4123,10 @@ prometheus:
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
     ##
-    serviceMonitorSelector: {}
-    ## Example which selects ServiceMonitors with label "prometheus" set to "somelabel"
-    # serviceMonitorSelector:
-    #   matchLabels:
-    #     prometheus: somelabel
-
+    serviceMonitorSelector: 
+      matchExpressions:
+        - key: prometheus
+          operator: DoesNotExist
     ## Namespaces to be selected for ServiceMonitor discovery.
     ##
     serviceMonitorNamespaceSelector: {}
@@ -4147,11 +4144,10 @@ prometheus:
     ## PodMonitors to be selected for target discovery.
     ## If {}, select all PodMonitors
     ##
-    podMonitorSelector: {}
-    ## Example which selects PodMonitors with label "prometheus" set to "somelabel"
-    # podMonitorSelector:
-    #   matchLabels:
-    #     prometheus: somelabel
+    podMonitorSelector: 
+      matchExpressions:
+        - key: prometheus
+          operator: DoesNotExist
 
     ## If nil, select own namespace. Namespaces to be selected for PodMonitor discovery.
     podMonitorNamespaceSelector: {}
@@ -4298,7 +4294,9 @@ prometheus:
 
     ## The remote_write spec configuration for Prometheus.
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#remotewritespec
-    remoteWrite: []
+    remoteWrite:
+      - name: media-cluster
+        url: https://prometheus.controlplane.integratn.tech/api/v1/write
     # - url: http://remote1/push
     ## additionalRemoteWrite is appended to remoteWrite
     additionalRemoteWrite: []
@@ -4350,7 +4348,17 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+     # Add additional remote write configurations if needed
+    additionalScrapeConfigs:
+      - job_name: 'kubernetes'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - target_label: cluster
+            replacement: media-cluster
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
@@ -4472,7 +4480,8 @@ prometheus:
     ## This is experimental and may change significantly without backward compatibility in any release.
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#thanosspec
     ##
-    thanos: {}
+    thanos: 
+      version: 0.39.0
       # secretProviderClass:
       #   provider: gcp
       #   parameters:

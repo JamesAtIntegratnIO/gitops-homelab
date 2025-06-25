@@ -43,9 +43,6 @@ spec:
     spec:
       project: default
       sources:
-        - repoURL: '{{.metadata.annotations.addons_repo_url}}'
-          targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
-          ref: values
         - chart: '{{.values.addonChart}}'
           repoURL: '{{.values.addonChartRepository}}'
           targetRevision: '{{.values.addonChartVersion}}'
@@ -54,7 +51,7 @@ spec:
             ignoreMissingValueFiles: true
             
             valueFiles:
-              - $values/{{.metadata.annotations.addons_repo_basepath}}charts/addons/{{.values.addonChart}}/values.yaml
+              - $values/{{.metadata.annotations.addons_repo_basepath}}environments/default/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/values.yaml
             valuesObject: 
@@ -94,8 +91,15 @@ spec:
                     - secretName: prometheus-{{.name}}-tls
                       hosts:
                         - prometheus.{{.metadata.annotations.subdomain}}.{{.metadata.annotations.domain}}
+        - repoURL: '{{.metadata.annotations.addons_repo_url}}'
+          targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
+          path: '{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.addonChart}}'
+          ref: values
+        - repoURL: '{{.metadata.annotations.addons_repo_url}}'
+          targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
+          path: '{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/'
       destination:
-        namespace: '{{.values.addonChart}}'
+        namespace: monitoring
         name: '{{.name}}'
       syncPolicy:
         automated: {}

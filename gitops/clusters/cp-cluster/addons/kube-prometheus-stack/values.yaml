@@ -1,0 +1,17 @@
+prometheus:
+  prometheusSpec:
+    enableRemoteWriteReceiver: true
+    enableFeatures:
+      - "remote-write-receiver"
+    serviceMonitorSelector:
+      matchExpressions:
+        - key: prometheus
+          operator: DoesNotExist
+    podMonitorSelector:
+      matchExpressions:
+        - key: prometheus
+          operator: DoesNotExist
+    thanos:
+      version: 0.39.0
+# https://enix.io/en/blog/thanos-prometheus/
+# Configure system prometheus to only monitor services and pods that do not have a team label for prometheus
