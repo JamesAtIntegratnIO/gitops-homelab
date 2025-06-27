@@ -1,7 +1,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
-  name: media-cluster-team-prometheus-monitor
+  name: media-team-prometheus-monitor
   namespace: monitoring
 spec:
   serviceAccountName: kube-prometheus-stack-prometheus
@@ -14,7 +14,7 @@ spec:
   serviceMonitorNamespaceSelector: {}
   podMonitorNamespaceSelector: {}
   remoteWrite:
-    - name: media-cluster
+    - name: media-team
       url: https://prometheus.controlplane.integratn.tech/api/v1/write
   thanos:
     version: 0.39.0
