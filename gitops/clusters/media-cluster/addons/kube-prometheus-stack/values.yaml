@@ -2522,6 +2522,7 @@ prometheus-node-exporter:
     jobLabel: node-exporter
   releaseLabel: true
   extraArgs:
+    - --collector.mountstats
     - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
     - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
   service:
@@ -3939,12 +3940,15 @@ prometheus:
     ## List of scrape classes to expose to scraping objects such as
     ## PodMonitors, ServiceMonitors, Probes and ScrapeConfigs.
     ##
-    scrapeClasses: []
-    # - name: istio-mtls
-    #   default: false
-    #   tlsConfig:
-    #     caFile: /etc/prometheus/secrets/istio.default/root-cert.pem
-    #     certFile: /etc/prometheus/secrets/istio.default/cert-chain.pem
+    scrapeClasses:
+      - default: true
+        name: cluster-relabeling
+        relabelings:
+          - sourceLabels: [ __name__ ]
+            regex: (.*)
+            targetLabel: cluster
+            replacement: media-cluster
+            action: replace
 
     ## PodTargetLabels are appended to the `spec.podTargetLabels` field of all PodMonitor and ServiceMonitor objects.
     ##
@@ -4034,7 +4038,9 @@ prometheus:
 
     ## External labels to add to any time series or alerts when communicating with external systems
     ##
-    externalLabels: {}
+    externalLabels:
+      cluster: media-cluster
+      prometheus: monitoring/media-kube-prometheus-stack-prometheus
 
     ## enable --web.enable-remote-write-receiver flag on prometheus-server
     ##

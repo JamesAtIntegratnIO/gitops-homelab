@@ -6,17 +6,11 @@ metadata:
 spec:
   serviceAccountName: kube-prometheus-stack-prometheus
   serviceMonitorSelector:
-    matchExpressions:
-      - key: prometheus
-        operator: In
-        values:
-          - media-cluster
+    matchLabels:
+      prometheus: media-cluster
   podMonitorSelector:
-    matchExpressions:
-      - key: prometheus
-        operator: In
-        values:
-          - media-cluster
+    matchLabels:
+      prometheus: media-cluster
   serviceMonitorNamespaceSelector: {}
   podMonitorNamespaceSelector: {}
   remoteWrite:

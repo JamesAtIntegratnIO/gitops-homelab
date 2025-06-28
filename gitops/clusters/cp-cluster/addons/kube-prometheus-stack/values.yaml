@@ -7,11 +7,28 @@ prometheus:
       matchExpressions:
         - key: prometheus
           operator: DoesNotExist
+      
     podMonitorSelector:
       matchExpressions:
         - key: prometheus
           operator: DoesNotExist
     thanos:
       version: 0.39.0
-# https://enix.io/en/blog/thanos-prometheus/
-# Configure system prometheus to only monitor services and pods that do not have a team label for prometheus
+    externalLabels:
+      cluster: controlplane
+      prometheus: monitoring/controlplane-kube-prometheus-stack-prometheus
+    scrapeClasses:
+      - default: true
+        name: cluster-relabeling
+        relabelings:
+          - sourceLabels: [ __name__ ]
+            regex: (.*)
+            targetLabel: cluster
+            replacement: controlplane
+            action: replace
+prometheusOperator:
+  serviceMonitor:
+    relabelings:
+      - action: replace
+        targetLabel: cluster
+        replacement: controlplane

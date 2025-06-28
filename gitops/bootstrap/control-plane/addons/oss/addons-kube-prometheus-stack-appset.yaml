@@ -109,6 +109,8 @@ spec:
           - ApplyOutOfSyncOnly=true
         managedNamespaceMetadata:
           labels:
-            pod-security.kubernetes.io/enforce: privileged
+            kubernetes.io/metadata.name: metallb-system
             pod-security.kubernetes.io/audit: privileged
+            pod-security.kubernetes.io/enforce: privileged
+            pod-security.kubernetes.io/enforce-version: latest
             pod-security.kubernetes.io/warn: privileged
