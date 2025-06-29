@@ -1,4 +1,4 @@
-
+addPrometheusAnnotations: true
 server:
   autoscaling:
     enabled: true
@@ -17,6 +17,21 @@ server:
     tls: true
   metrics:
     enabled: true
+    serviceMonitor:
+      enabled: true
+controller:
+  metrics:
+    enabled: true
+    applicationLabels:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+dex:
+  enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 repoServer:
   autoscaling:
@@ -26,14 +41,27 @@ repoServer:
     targetCPUUtilizationPercentage: 60
   metrics:
     enabled: true
+    serviceMonitor:
+      enabled: true
 
 applicationSet:
   metrics:
     enabled: true
+    serviceMonitor:
+      enabled: true
 
 notifications:
   metrics:
     enabled: true
+    serviceMonitor:
+      enabled: true
+
+redis:
+  enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 configs:
   cm:
