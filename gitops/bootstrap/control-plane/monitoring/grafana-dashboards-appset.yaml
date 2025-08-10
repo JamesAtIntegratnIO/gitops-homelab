@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dashboards-multicluster
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: cluster_name
+              operator: NotIn
+              values:
+                - controlplane-cluster
+  template:
+    metadata:
+      name: dashboards-{{name}}
+    spec:
+      project: default
+      source:
+        repoURL: '{{.metadata.annotations.addons_repo_url}}'
+        targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
+        path: '{{.metadata.annotations.addons_repo_basepath}}/clusters/{{.name}}/grafana-dashboards'
+      destination:
+        server: https://kubernetes.default.svc  # This is the controlplane ArgoCD
+        namespace: monitoring
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
