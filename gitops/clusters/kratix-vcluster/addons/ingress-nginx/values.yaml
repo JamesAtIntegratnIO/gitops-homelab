@@ -1,0 +1,7 @@
+# Helm chart values
+
+controller:
+  service:
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: 10.0.10.200
+
