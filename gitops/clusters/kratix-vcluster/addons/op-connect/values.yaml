@@ -1,0 +1,8 @@
+connect:
+  ingress:
+    hosts:
+      - host: op-connect.kratix-cluster.integratn.tech
+    tls:
+      - secretName: op-connect-tls
+        hosts:
+          - op-connect.kratix-cluster.integratn.tech

@@ -1,0 +1,3 @@
+resources:
+  - team-prometheus-monitor.yaml
+  - media-cluster-scrape-secret.yaml

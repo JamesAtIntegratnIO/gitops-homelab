@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: media-team-prometheus-monitor
+  namespace: monitoring
+spec:
+  serviceAccountName: kube-prometheus-stack-prometheus
+  serviceMonitorSelector:
+    matchLabels:
+      prometheus: media-cluster
+  podMonitorSelector:
+    matchLabels:
+      prometheus: media-cluster
+  serviceMonitorNamespaceSelector: {}
+  podMonitorNamespaceSelector: {}
+  remoteWrite:
+    - name: media-team
+      url: https://prometheus.controlplane.integratn.tech/api/v1/write
+  thanos:
+    version: 0.39.0
+  # additionalScrapeConfigs:
+  #   name: media-cluster-prometheus-additional-scrape-configs
+  #   key: additional-scrape-configs.yaml
