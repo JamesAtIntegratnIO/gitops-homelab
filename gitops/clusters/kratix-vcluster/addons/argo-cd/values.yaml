@@ -1,5 +1,5 @@
 global:
-  domain: argocd.media-cluster.integratn.tech
+  domain: argocd.kratix-cluster.integratn.tech
 server:
   service:
     annotations:
