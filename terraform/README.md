@@ -1,139 +1,459 @@
-# Terraform Configuration for Talos Kubernetes Cluster
+# Terraform Infrastructure for GitOps Homelab
 
-This Terraform project automates the deployment of a Talos Kubernetes cluster on Proxmox virtual machines. It includes the setup of the Kubernetes nodes, bootstrapping the Talos control plane, and generating the necessary configuration files for cluster management.
+This Terraform project implements a comprehensive multi-cluster Kubernetes infrastructure using **Talos Linux** on **Proxmox VE**. It provides a complete **GitOps-ready** environment with **ArgoCD**, **1Password Connect**, **External Secrets**, and **Cloudflare DNS** integration.
 
-## Overview
+## 📊 Infrastructure Overview
 
-The configuration defines resources for deploying VMs on Proxmox, configuring Talos machines, and generating local files for Talos and Kubernetes cluster management. It leverages variables for customization and modularity.
+The project deploys multiple specialized Kubernetes clusters in a **hub-and-spoke architecture**:
+- **Hub Cluster**: Control plane running ArgoCD, External Secrets, and GitOps components
+- **Spoke Clusters**: Specialized workload clusters (media, monitoring, platform engineering)
+- **Modular Design**: Reusable Terraform modules for consistent deployments
+- **Automated Deployment**: One-command cluster provisioning with `deploy.sh` scripts
 
-### Key Components
+## 🏗️ Architecture Components
 
-- **Proxmox VMs**: Virtual machines for the Kubernetes nodes are provisioned on a Proxmox VE cluster.
-- **Talos Machine Bootstrap**: Initializes the Talos control plane on the designated control plane node.
-- **Local Files**: Configuration files for Talos and Kubernetes (`talosconfig` and `kubeconfig`) are generated and stored locally for cluster administration.
+### Core Infrastructure
+- **Proxmox VMs**: High-performance virtual machines with customizable CPU, memory, and storage
+- **Talos Linux**: Immutable, secure Kubernetes OS with API-driven configuration
+- **VM Templates**: Pre-built Talos images for rapid cluster deployment
+- **Network Configuration**: VLAN support, static IPs, and custom MAC addresses
 
-## Prerequisites
+### GitOps Integration
+- **ArgoCD Bootstrap**: Automated GitOps control plane setup
+- **External Secrets Operator**: 1Password Connect integration for secure secret management
+- **Cluster Registration**: Automatic spoke cluster registration with hub
+- **Application Sets**: Dynamic application deployment across clusters
 
-- **Proxmox VE Cluster**: A running Proxmox VE cluster where the Kubernetes nodes will be deployed.
-- **Terraform**: Terraform must be installed on your machine to execute the configuration.
-- **Talos CLI**: For interacting with the Talos cluster post-deployment.
+### DNS and Networking
+- **Cloudflare Integration**: Automated DNS record management
+- **Ingress Ready**: Pre-configured DNS for cluster services
+- **Multi-Network Support**: VLAN segmentation and network policies
 
-## Configuration
-### Proxmox Provider
+## 📁 Project Structure
 
-A Terraform provider is responsible for understanding API interactions and exposing resources. The Proxmox provider uses
-the Proxmox API. This provider exposes two resources: [proxmox_vm_qemu](resources/vm_qemu.md)
-and [proxmox_lxc](resources/lxc.md).
+```
+terraform/
+├── hub/                    # Control plane cluster
+│   ├── cluster.tf         # Hub cluster configuration
+│   ├── deploy.sh          # Automated deployment script
+│   └── terraform.tfvars   # Hub-specific variables
+├── spokes/                # Spoke clusters
+│   ├── media-cluster/     # Media server cluster
+│   ├── monitoring-cluster/  # Observability cluster
+│   └── kratix-test-cluster/ # Platform engineering cluster
+└── modules/               # Reusable Terraform modules
+    ├── cluster/           # Core cluster deployment module
+    └── cloudflare/        # DNS management module
+```
 
-#### Creating the Proxmox user and role for terraform
+## 🔧 Prerequisites
 
-The particular privileges required may change but here is a suitable starting point rather than using cluster-wide
-Administrator rights
+### Infrastructure Requirements
+- **Proxmox VE 8.0+**: Virtualization platform with sufficient resources
+- **Network Setup**: VLAN support and static IP ranges configured
+- **Storage**: ZFS or other high-performance storage backend
+- **Templates**: Talos Linux VM templates pre-deployed in Proxmox
 
-Log into the Proxmox cluster or host using ssh (or mimic these in the GUI) then:
+### Access and Credentials
+- **Proxmox API Access**: User account with `TerraformProv` role
+- **1Password Connect**: Server and credentials for secret management
+- **Cloudflare API**: API key for DNS record management
+- **Git SSH Access**: SSH keys for GitOps repository access
 
-- Create a new role for the future terraform user.
-- Create the user "terraform-prov@pve"
-- Add the TERRAFORM-PROV role to the terraform-prov user
+### Development Tools
+- **OpenTofu/Terraform**: Infrastructure as Code tool
+- **Talos CLI**: For cluster management and troubleshooting
+- **kubectl**: Kubernetes command-line tool
+- **Nix (Recommended)**: For reproducible development environment
 
+### Resource Requirements
+
+| Cluster Type | Min CPU | Min RAM | Min Storage | Nodes |
+|--------------|---------|---------|-------------|-------|
+| Hub Cluster | 6 cores | 8GB | 96GB | 3 |
+| Media Cluster | 4 cores | 8GB | 100GB+ | 1-3 |
+| Monitoring | 6 cores | 12GB | 64GB | 3 |
+| Platform/Test | 2 cores | 4GB | 32GB | 1-2 |
+
+## ⚙️ Configuration
+
+### Environment Setup
+
+1. **Configure secrets** in `secrets.env`:
 ```bash
+PM_USER="terraform-prov@pve"
+PM_PASS="your-proxmox-password"
+TF_VAR_cloudflare_api_key="your-cloudflare-api-key"
+TF_VAR_onepassword_credentials="your-1password-credentials"
+TF_VAR_onepassword_token="your-1password-token"
+```
+
+2. **Proxmox User and Role Setup**:
+```bash
+# Create role with minimal required privileges
 pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
+
+# Create user and assign role
 pveum user add terraform-prov@pve --password <password>
 pveum aclmod / -user terraform-prov@pve -role TerraformProv
 ```
 
-The provider also supports using an API key rather than a password, see below for details.
+### Cluster Configuration
 
-After the role is in use, if there is a need to modify the privileges, simply issue the command showed, adding or
-removing privileges as needed.
+Each cluster is configured via `terraform.tfvars` with the following key parameters:
 
-
-Proxmox > 8:
-```bash
-pveum role modify TerraformProv -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
-```
-Proxmox < 8:
-```bash
-pveum role modify TerraformProv -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
-```
-For more information on existing roles and privileges in Proxmox, refer to the vendor docs
-on [PVE User Management](https://pve.proxmox.com/wiki/User_Management)
-
-#### Creating the connection via username and password
-
-When connecting to the Proxmox API, the provider has to know at least three parameters: the URL, username and password.
-One can supply fields using the provider syntax in Terraform. It is recommended to pass secrets through environment
-variables.
-
-```bash
-export PM_USER="terraform-prov@pve"
-export PM_PASS="password"
-```
-
-Note: these values can also be set in main.tf but users are encouraged to explore Vault as a way to remove secrets from
-their HCL.
-
+#### Node Configuration
 ```hcl
-provider "proxmox" {
-  pm_api_url = "https://proxmox-server01.example.com:8006/api2/json"
+nodes = {
+  "10.0.5.101" = {
+    name             = "talos-controlplane-1"
+    controlplane     = true
+    cpu_cores        = 4
+    memory           = 8192
+    disk_size        = "100G"
+    target_node_name = "pve1"
+    networks = [{
+      vlan = 25
+      macaddr = "02:00:00:00:00:01"
+    }]
+  }
 }
 ```
 
-## Usage
-
-1. **Initialize Terraform**
-
-```bash
-terraform init
+#### Network Configuration
+```hcl
+ip_base             = "10.0.5.0"      # Base IP for cluster
+cidr                = 24              # Network CIDR
+gateway             = "10.0.0.1"      # Default gateway
+cluster_endpoint_ip = "10.0.5.100"    # Kubernetes API endpoint
+nameservers         = ["1.1.1.1", "10.0.0.1"]
 ```
 
-2. **Plan the Deployment**
-
-Review the actions Terraform will perform before applying them.
-
-```bash
-terraform plan
+#### GitOps Configuration
+```hcl
+gitops_addons_org      = "https://github.com/jamesatintegratnio"
+gitops_addons_repo     = "gitops-homelab"
+gitops_addons_basepath = "gitops/"
+gitops_addons_path     = "bootstrap/control-plane/addons"
+gitops_addons_revision = "main"
 ```
 
-3. **Apply the Configuration**
+### State Management
 
-Deploy the Kubernetes cluster on Proxmox.
+The project uses **PostgreSQL backend** for Terraform state management:
+- **Hub Cluster**: `postgres://10.0.3.1/terraform_state`
+- **Media Cluster**: `postgres://10.0.3.1/terraform_media_cluster`
+- **Monitoring Cluster**: Local state file (fallback)
 
-```bash
-terraform apply
+### DNS Configuration
+
+Cloudflare DNS records are automatically managed:
+```hcl
+cloudflare_records = {
+  "cluster-api" = {
+    name    = "api.cluster.example.com"
+    type    = "A"
+    content = "10.0.5.100"
+    proxied = false
+    ttl     = 1
+  }
+  "wildcard-apps" = {
+    name    = "*.apps.cluster.example.com"
+    type    = "A"
+    content = "10.0.5.200"
+    proxied = false
+    ttl     = 1
+  }
+}
 ```
 
-4. **Access the Cluster**
+## 🚀 Deployment Guide
 
-After deployment, use the generated `kubeconfig` file to access your Kubernetes cluster.
+### Quick Start - Deploy All Clusters
+```bash
+# From project root - deploys hub + all spoke clusters
+yolo
+```
+
+### Individual Cluster Deployment
+
+#### 1. Deploy Hub Cluster (Control Plane)
+```bash
+cd terraform/hub
+./deploy.sh
+```
+
+#### 2. Deploy Spoke Clusters
+```bash
+# Media cluster
+cd terraform/spokes/media-cluster
+./deploy.sh
+
+# Monitoring cluster
+cd terraform/spokes/monitoring-cluster
+./deploy.sh
+
+# Platform engineering cluster
+cd terraform/spokes/kratix-test-cluster
+./deploy.sh
+```
+
+### Manual Deployment Steps
+
+For more control or troubleshooting:
 
 ```bash
+# Navigate to desired cluster directory
+cd terraform/hub  # or terraform/spokes/media-cluster
+
+# Initialize Terraform
+tofu init --upgrade
+
+# Review deployment plan
+tofu plan
+
+# Apply configuration
+tofu apply
+
+# Access cluster
 export KUBECONFIG=./kubeconfig
 kubectl get nodes
 ```
 
-## Managing the Cluster
+### Post-Deployment Access
 
-- **Talos Configuration**: The `talosconfig` file contains credentials and endpoints for managing the Talos cluster. Use the Talos CLI to interact with your cluster.
-- **Kubernetes Configuration**: The `kubeconfig` file allows you to manage your Kubernetes cluster using `kubectl` or other Kubernetes tools.
+#### ArgoCD Access
+```bash
+# Get ArgoCD admin password
+kubectl get secrets argocd-initial-admin-secret -n argocd \
+  --template="{{index .data.password | base64decode}}"
 
-## Conclusion
-
-This Terraform project simplifies the process of deploying and managing a Talos Kubernetes cluster on Proxmox. Customize the configuration to suit your infrastructure and requirements.
-
-
-## Notes that need sorted
-static IPs are really hard with talos on first boot. cheat and set a static IP in your dhcp server with some reserved macs that you will apply to your nodes. Generate unicast macs here: https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast 
-
-If a namespace gets stuck on destroy
-  1. cancel the destroy
-  2. Run the following script 
- ```
-kubectl get namespace "stucked-namespace" -o json \
-  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" \
-  | kubectl replace --raw /api/v1/namespaces/stucked-namespace/finalize -f -
+# Access ArgoCD UI
+echo "ArgoCD URL: https://$(kubectl get ingress -n argocd argo-cd-argocd-server -o jsonpath='{.spec.rules[0].host}')"
 ```
-  3. reapply the destroy
+
+#### Cluster Context Management
+```bash
+# Add cluster to kubeconfig with kubecm
+kubecm add kubeconfig -f kubeconfig -c
+kubecm switch admin@cluster-name
+
+# Or manually export
+export KUBECONFIG=./kubeconfig
+```
+
+## 🛠️ Cluster Management
+
+### Talos Administration
+```bash
+# Apply talos configuration
+export TALOSCONFIG=./talosconfig
+talosctl config endpoint <node-ip>
+
+# Check cluster health
+talosctl health
+talosctl get nodes
+
+# Bootstrap cluster (first deployment only)
+talosctl bootstrap -n <control-plane-ip>
+
+# Upgrade Talos (when new versions available)
+talosctl upgrade --image=ghcr.io/siderolabs/talos:v1.8.1
+```
+
+### Kubernetes Operations
+```bash
+# Cluster status
+kubectl get nodes -o wide
+kubectl get pods -A
+
+# Resource usage
+kubectl top nodes
+kubectl top pods -A
+
+# Troubleshooting
+kubectl describe node <node-name>
+kubectl logs -n kube-system -l app=cilium
+```
+
+### GitOps Management
+```bash
+# Check ArgoCD applications
+kubectl get applications -n argocd
+
+# Sync specific application
+argocd app sync <app-name>
+
+# Check application status
+argocd app get <app-name>
+```
+
+### Secret Management
+```bash
+# Check External Secrets Operator
+kubectl get externalsecrets -A
+kubectl get secretstores -A
+
+# Manually sync secret
+kubectl annotate externalsecret <secret-name> force-sync=$(date +%s) --overwrite
+```
+
+## 🏢 Cluster Specifications
+
+### Hub Cluster (`terraform/hub/`)
+**Purpose**: GitOps control plane and cluster management
+- **ArgoCD**: Application lifecycle management
+- **External Secrets Operator**: 1Password Connect integration
+- **Cluster API**: Multi-cluster management
+- **DNS**: Cloudflare integration for service discovery
+
+### Media Cluster (`terraform/spokes/media-cluster/`)
+**Purpose**: Media server and streaming applications
+- **Storage Optimization**: High-capacity storage configuration
+- **Network Performance**: Optimized for media streaming
+- **GPU Support**: NVIDIA GPU passthrough capability (optional)
+- **Example Services**: Plex, Jellyfin, Sonarr, Radarr
+
+### Monitoring Cluster (`terraform/spokes/monitoring-cluster/`)
+**Purpose**: Observability and monitoring stack
+- **Prometheus Stack**: Metrics collection and alerting
+- **Grafana**: Visualization and dashboards
+- **Loki**: Log aggregation
+- **Cross-cluster Monitoring**: Observes all clusters in the homelab
+
+### Kratix Test Cluster (`terraform/spokes/kratix-test-cluster/`)
+**Purpose**: Platform engineering and service composition
+- **Kratix Platform**: Service composition and abstraction
+- **Development Environment**: Testing new platform capabilities
+- **Resource Efficiency**: Minimal resource allocation for testing
+
+## 🔧 Module Documentation
+
+### Cluster Module (`modules/cluster/`)
+
+**Features**:
+- Multi-node Talos cluster deployment
+- Control plane and worker node management
+- VM template cloning with customization
+- Network configuration with VLAN support
+- Automatic kubeconfig and talosconfig generation
+
+**Key Variables**:
+```hcl
+variable "nodes" {
+  type = map(object({
+    name             = string
+    controlplane     = optional(bool, false)
+    cpu_cores        = optional(number, 2)
+    memory           = optional(number, 1024)
+    disk_size        = optional(string, "32G")
+    target_node_name = optional(string, "pve2")
+    networks         = optional(list(object({
+      vlan    = optional(string, "-1")
+      macaddr = optional(string, null)
+    })))
+    create_vm = optional(bool, true)
+    nvidia    = optional(bool, false)
+  }))
+}
+```
+
+### Cloudflare Module (`modules/cloudflare/`)
+
+**Features**:
+- Automated DNS record management
+- Support for A, CNAME, and other record types
+- Cloudflare proxy configuration
+- Wildcard domain support
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+#### Stuck Namespace on Destroy
+```bash
+# Remove finalizers from stuck namespace
+kubectl get namespace "stuck-namespace" -o json \
+  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" \
+  | kubectl replace --raw /api/v1/namespaces/stuck-namespace/finalize -f -
+```
+
+#### Talos Static IP Issues
+Talos has challenges with static IPs on first boot. Workarounds:
+1. **DHCP Reservations**: Configure static DHCP reservations in your router
+2. **MAC Address Generation**: Use [MAC generator](https://www.hellion.org.uk/cgi-bin/randmac.pl?scope=local&type=unicast) for consistent addresses
+3. **Post-boot Configuration**: Apply network configuration after initial boot
+
+#### VM Template Issues
+```bash
+# Recreate Talos template if corrupted
+qm destroy 9999  # Assuming template ID 9999
+# Re-import fresh Talos image
+```
+
+#### GitOps Sync Issues
+```bash
+# Check ArgoCD application health
+kubectl get applications -n argocd
+argocd app get <app-name>
+
+# Force refresh and sync
+argocd app refresh <app-name>
+argocd app sync <app-name>
+```
+
+### Monitoring and Observability
+
+#### Key Metrics to Monitor
+- **Cluster Health**: Node status, resource utilization
+- **Application Health**: ArgoCD sync status, pod health
+- **Storage**: Disk usage, I/O performance
+- **Network**: Bandwidth utilization, latency
+
+#### Useful Commands
+```bash
+# Check cluster resource usage
+kubectl top nodes
+kubectl top pods -A
+
+# Examine system pods
+kubectl get pods -n kube-system
+kubectl get pods -n argocd
+
+# Check storage
+kubectl get pv,pvc -A
+```
+
+## 🔒 Security Considerations
+
+### Network Security
+- **VLAN Segmentation**: Isolate cluster traffic
+- **Firewall Rules**: Restrict inter-cluster communication
+- **Network Policies**: Kubernetes-native network controls
+
+### Secret Management
+- **1Password Integration**: Centralized secret management
+- **External Secrets Operator**: Automatic secret rotation
+- **RBAC**: Role-based access control for cluster resources
+
+### Infrastructure Security
+- **Talos Hardening**: Immutable OS with minimal attack surface
+- **API Security**: Secure Kubernetes API configuration
+- **Certificate Management**: Automated certificate lifecycle
+
+## 📊 Performance Optimization
+
+### Resource Allocation
+- **CPU**: Adequate allocation for control plane components
+- **Memory**: Sufficient RAM for container workloads
+- **Storage**: High-performance storage for etcd and applications
+
+### Network Performance
+- **MTU Configuration**: Optimize for your network infrastructure
+- **CNI Selection**: Cilium for advanced networking features
+- **Load Balancing**: Proper ingress controller configuration
+
+This Terraform infrastructure provides a robust foundation for a production-ready homelab environment with enterprise-grade capabilities and GitOps best practices.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
