@@ -1,6 +1,6 @@
 terraform {
   backend "pg" {
-    conn_str = "postgres://10.0.3.1/terraform_media_cluster"
+    conn_str = "postgres://10.0.3.1/terraform_kratix_cluster"
   }
   required_providers {
     proxmox = {

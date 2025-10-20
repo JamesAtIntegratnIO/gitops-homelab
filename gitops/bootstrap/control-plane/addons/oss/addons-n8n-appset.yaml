@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: addons-argocd
+  name: addons-n8n
 spec:
   goTemplate: true
   syncPolicy:
@@ -13,17 +13,17 @@ spec:
         generators:
           - clusters:
               values:
-                addonChart: argo-cd
+                addonChart: n8n
                 # anything not staging or prod use this version
-                addonChartVersion: 9.0.3
-                addonChartRepositoryNamespace: argocd
-                addonChartRepository: https://argoproj.github.io/argo-helm
+                addonChartVersion: 1.0.15
+                addonChartRepositoryNamespace: n8n
+                addonChartRepository: oci://8gears.container-registry.com/library/n8n
               selector:
                 matchExpressions:
                   - key: akuity.io/argo-cd-cluster-name
                     operator: NotIn
                     values: [in-cluster]
-                  - key: enable_argocd
+                  - key: enable_n8n
                     operator: In
                     values: ['true']
           - clusters:
@@ -31,13 +31,13 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 9.0.3
+                addonChartVersion: 1.0.15
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 9.0.3
+                addonChartVersion: 1.0.15
   template:
     metadata:
       name: addon-{{.name}}-{{.values.addonChart}}
@@ -62,11 +62,10 @@ spec:
           targetRevision: '{{.metadata.annotations.addons_repo_revision}}'
           path: '{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/'
       destination:
-        namespace: '{{.values.addonChartRepositoryNamespace}}'
+        namespace: 'n8n'
         name: '{{.name}}'
       syncPolicy:
         automated:
           prune: false
         syncOptions:
           - CreateNamespace=true
-          - ServerSideApply=true  # Big CRDs.

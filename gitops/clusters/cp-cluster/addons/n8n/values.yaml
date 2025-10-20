@@ -1,0 +1,136 @@
+#Prod like set up with CloudNativePG and nginx-ingress
+
+# Define hostname anchor at the top of the file
+image:
+  repository: n8nio/n8n
+  tag: 1.115.3
+  pullPolicy: Always
+
+
+main:
+  config:
+    n8n:
+      editor_base_url: &url https://n8n.integratn.tech
+    executions_mode: queue
+
+
+    # webhook related settings
+    webhook_url: *url
+    queue:
+      health:
+        check:
+          active: true
+      bull:
+        redis:
+          host: n8n-valkey-primary
+          port: 6379
+  secret:
+    n8n:
+      encryption_key: "key-goes-here"
+  extraEnv: &extraEnv
+    DB_TYPE:
+      value: postgresdb
+    DB_POSTGRESDB_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: &secret n8n-postgres-credentials
+          key: password
+    DB_POSTGRESDB_USER:
+      valueFrom:
+        secretKeyRef:
+          name: *secret
+          key: username
+    DB_POSTGRESDB_DATABASE:
+      valueFrom:
+        secretKeyRef:
+          name: *secret
+          key: database
+    DB_POSTGRESDB_HOST:
+      valueFrom:
+        secretKeyRef:
+          name: *secret
+          key: hostname
+  extraVolumeMounts: &extraVolumeMounts
+    - name: n8n-pvc
+      mountPath: /home/n8n/.n8n
+  extraVolumes: &extraVolumes
+    - name: n8n-pvc
+      persistentVolumeClaim:
+        claimName: n8n-pvc
+
+  # # Mount the CNPG CA Cert into N8N container
+  # extraVolumeMounts: &extraVolumeMounts
+  #   - name: db-ca-cert
+  #     mountPath: /home/ssl/certs/postgresql
+  #     readOnly: true
+  # extraVolumes: &extraVolumes
+  #   - name: db-ca-cert
+  #     secret:
+  #       secretName: db-ca
+  #       items:
+  #         - key: ca.crt
+            # path: ca.crt
+  resources:
+    limits:
+      memory: 2048Mi
+    requests:
+      memory: 512Mi
+
+worker:
+  enabled: true
+  extraEnv: *extraEnv # using YAML magic (anchors) to reference main extraEnv
+  extraVolumeMounts: *extraVolumeMounts # using YAML magic (anchors) to reference main extraVolumeMounts
+  extraVolumes: *extraVolumes # using YAML magic (anchors) to reference main extraVolumes
+
+webhook:
+  enabled: true
+  extraEnv: *extraEnv # using YAML magic (anchors) to reference main extraEnv
+  extraVolumeMounts: *extraVolumeMounts # using YAML magic (anchors) to reference main extraVolumeMounts
+  extraVolumes: *extraVolumes # using YAML magic (anchors) to reference main extraVolumes
+
+valkey:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/valkey
+    tag: latest
+  architecture: standalone
+  sentinel:
+    enabled: false
+  auth:
+    enabled: false
+  primary:
+    kind: Deployment
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: &hostname n8n.integratn.tech
+      paths:
+        - /
+  tls:
+    - secretName: n8n-ingress-tls
+      hosts:
+        - *hostname
+
+
+
+# cnpg DB cluster request
+extraManifests:
+  - {"apiVersion":"external-secrets.io/v1","kind":"ExternalSecret","metadata":{"name":"n8n-postgres-credentials","namespace":"n8n"},"spec":{"refreshInterval":"1h","secretStoreRef":{"kind":"ClusterSecretStore","name":"onepassword-store"},"target":{"name":"n8n-postgres-credentials","creationPolicy":"Owner"},"dataFrom":[{"extract":{"key":"n8n-postgres-credentials","decodingStrategy":"None","conversionStrategy":"Default","metadataPolicy":"None"}}]}}
+  - {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"name":"n8n-pv","annotations":{"pv.kubernetes.io/provisioned-by":"k8s-sigs.io/nfs-subdir-external-provisioner"},"labels":{"app":"n8n"}},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"1Gi"},"nfs":{"path":"/mnt/user/kube_storage/n8n-pvc","server":"10.0.0.12"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"nfs-client","volumeMode":"Filesystem"}}
+  - {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"name":"n8n-pvc","namespace":"n8n","labels":{"app":"n8n"}},"spec":{"storageClassName":"nfs-client","accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"1Gi"}},"volumeName":"n8n-pv"}}

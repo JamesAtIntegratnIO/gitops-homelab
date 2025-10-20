@@ -1,0 +1,200 @@
+# Cloudflare Zero Trust Configuration Example
+# Copy this file to terraform.tfvars and fill in your values
+
+###################################################
+#   ___                           _               #
+#  / _ \                         | |              #
+# / /_\ \ ___ ___ ___  _   _ _ __ | |_             #
+# |  _  |/ __/ __/ _ \| | | | '_ \| __|            #
+# | | | | (_| (_| (_) | |_| | | | | |_             #
+# \_| |_/\___\___\___/ \__,_|_| |_|\__|            #
+#                                                 #
+###################################################
+
+cloudflare_account_id = "your-account-id-here"  # Get from Cloudflare Dashboard
+cloudflare_zone_name  = "integratn.tech"
+auth_domain_prefix    = "homelab"  # becomes homelab.cloudflareaccess.com
+
+organization_name = "Homelab"
+
+# Branding
+login_background_color = "#1a1a1a"
+login_text_color      = "#ffffff"
+login_header_text     = "Homelab Services"
+login_footer_text     = "Secure Access via Cloudflare Zero Trust"
+
+###################################################
+#   _____    _           _   _ _                  #
+#  |_   _|  | |         | | (_) |                 #
+#    | |  __| | ___ _ __ | |_ _| |_ _   _         #
+#    | | / _` |/ _ \ '_ \| __| | __| | | |        #
+#   _| || (_| |  __/ | | | |_| | |_| |_| |        #
+#   \___/\__,_|\___|_| |_|\__|_|\__|\__, |        #
+#                                    __/ |        #
+#                                   |___/         #
+###################################################
+
+# Enable OTP (Email-based authentication)
+enable_otp = true
+
+# GitHub SSO (Optional)
+enable_github_sso    = false
+# github_client_id     = "your-github-client-id"
+# github_client_secret = "your-github-client-secret"
+
+# Google SSO (Optional)
+enable_google_sso    = false
+# google_client_id     = "your-google-client-id"
+# google_client_secret = "your-google-client-secret"
+
+###################################################
+#    _____                                        #
+#   |  __ \                                       #
+#   | |  \/_ __ ___  _   _ _ __  ___             #
+#   | | __| '__/ _ \| | | | '_ \/ __|            #
+#   | |_\ \ | | (_) | |_| | |_) \__ \            #
+#    \____/_|  \___/ \__,_| .__/|___/            #
+#                         | |                    #
+#                         |_|                    #
+###################################################
+
+# Admin users (full access)
+admin_emails = [
+  "admin@example.com",
+]
+
+# Developer group (optional)
+enable_developer_group = false
+developer_emails = [
+  # "dev@example.com",
+]
+
+# Family group (optional - for media services, etc.)
+enable_family_group = false
+family_emails = [
+  # "family@example.com",
+]
+
+# Internal network access (optional)
+enable_internal_network_group = false
+internal_network_cidrs = [
+  # "10.0.0.0/8",
+  # "192.168.0.0/16",
+]
+
+###################################################
+#   ___  ______ ___  _ _           _   _          #
+#  / _ \ | ___ \  _ \| (_)         | | (_)         #
+# / /_\ \| |_/ / |_) | |_  ___ __ _| |_ _  ___  _ __  #
+# |  _  ||  __/|  __/| | |/ __/ _` | __| |/ _ \| '_ \ #
+# | | | || |   | |   | | | (_| (_| | |_| | (_) | | | |#
+# \_| |_/\_|   \_|   |_|_|\___\__,_|\__|_|\___/|_| |_|#
+#                                                 #
+###################################################
+
+session_duration = "24h"
+
+# Applications to protect with Zero Trust
+# This is a list of objects for easy mapping
+applications = [
+  {
+    name   = "ArgoCD"
+    domain = "argocd.integratn.tech"
+    tags   = ["infrastructure", "gitops"]
+  },
+  {
+    name   = "Grafana"
+    domain = "grafana.integratn.tech"
+    tags   = ["monitoring", "observability"]
+    allow_developers = true
+  },
+  {
+    name   = "Proxmox"
+    domain = "proxmox.integratn.tech"
+    tags   = ["infrastructure", "virtualization"]
+  },
+  # Example: Media service with family access
+  # {
+  #   name         = "Plex"
+  #   domain       = "plex.integratn.tech"
+  #   allow_family = true
+  #   tags         = ["media"]
+  # },
+  # Example: Development tool with CORS
+  # {
+  #   name             = "Portainer"
+  #   domain           = "portainer.integratn.tech"
+  #   enable_cors      = true
+  #   allow_developers = true
+  #   tags             = ["development", "containers"]
+  # },
+  # Example: Service with purpose justification
+  # {
+  #   name                           = "Production Database"
+  #   domain                         = "db.integratn.tech"
+  #   purpose_justification_required = true
+  #   purpose_justification_prompt   = "Why do you need access to the production database?"
+  #   session_duration               = "1h"
+  #   tags                           = ["database", "production"]
+  # },
+]
+
+###################################################
+#   _____                       _                 #
+#  |_   _|                     | |                #
+#    | |_   _ _ __  _ __   ___| |                 #
+#    | | | | | '_ \| '_ \ / _ \ |                 #
+#    | | |_| | | | | | | |  __/ |                 #
+#    \_/\__,_|_| |_|_| |_|\___|_|                 #
+#                                                 #
+###################################################
+
+# Cloudflare Tunnel (recommended for homelab)
+enable_tunnel = false
+
+# Generate tunnel secret with: openssl rand -base64 32
+# tunnel_secret = "your-base64-encoded-secret"
+
+tunnel_name = "homelab-tunnel"
+
+# Tunnel ingress rules (examples)
+tunnel_ingress_rules = [
+  # {
+  #   hostname      = "argocd.integratn.tech"
+  #   service       = "https://10.0.5.200:443"
+  #   no_tls_verify = true
+  # },
+  # {
+  #   hostname = "grafana.integratn.tech"
+  #   service  = "http://10.0.5.200:3000"
+  # },
+  # {
+  #   hostname = "proxmox.integratn.tech"
+  #   service  = "https://10.0.0.10:8006"
+  #   no_tls_verify = true
+  # },
+]
+
+###################################################
+#    ___   ___  ______                            #
+#   |__ \ / _ \ |  _  \                           #
+#      ) | | | || | | |                           #
+#     / /| | | || | | |                           #
+#    / /_| |_| || |/ /                            #
+#   |____|\___/ |___/                             #
+#                                                 #
+###################################################
+
+# Device Posture (optional)
+enable_device_posture = false
+
+# Data Loss Prevention (optional)
+enable_dlp = false
+
+# DLP patterns (if enabled)
+dlp_patterns = [
+  # {
+  #   name  = "Credit Card"
+  #   regex = "\\b\\d{4}[- ]?\\d{4}[- ]?\\d{4}[- ]?\\d{4}\\b"
+  # },
+]

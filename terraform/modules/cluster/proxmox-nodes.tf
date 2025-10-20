@@ -9,7 +9,7 @@ resource "proxmox_vm_qemu" "nodes" {
   define_connection_info = false
   os_type                = "cloud-init"
   # clone                  = "talos-1.7.5-template"
-  clone                  = coalesce(each.value.vm_template, var.vm_template, "talos-1.7.5-template")
+  clone                  = coalesce(each.value.vm_template, var.vm_template, "talos-1.8.1-template")
   qemu_os = "l26"
   # ipconfig0              = "ip=${each.key}/${var.cidr},gw=${var.gateway}"
 

@@ -5,13 +5,14 @@ nodes = {
     controlplane = true
     networks = [{
       vlan = 25
+      macaddr          = "36:e0:b5:9e:5d:71"
     }]
     target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
-    macaddr          = "36:e0:b5:9e:5d:71"
+    
   }
   "10.0.10.102" = {
     name         = "kratix-cluster-2"
@@ -19,13 +20,14 @@ nodes = {
     controlplane = true
     networks = [{
       vlan = 25
+      macaddr          = "36:e0:b5:9e:5d:35"
     }]
     target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
-    macaddr          = "36:e0:b5:9e:5d:35"
+    
   }
   "10.0.10.103" = {
     name         = "kratix-cluster-3"
@@ -33,13 +35,14 @@ nodes = {
     controlplane = true
     networks = [{
       vlan = 25
+      macaddr          = "36:e0:b5:9e:5d:1c"
     }]
     target_node_name = "pve"
     disk_size        = "32G"
     cpu_sockets      = 1
     cpu_cores        = 4
     memory           = 8192
-    macaddr          = "36:e0:b5:9e:5d:1c"
+    
   }
 
   # "10.0.10.106" = {
@@ -62,7 +65,7 @@ gateway             = "10.0.0.1"
 cluster_endpoint_ip = "10.0.10.100"
 nameservers         = ["1.1.1.1", "10.0.0.1"]
 
-cluster_name = "media-cluster"
+cluster_name = "kratix-vcluster"
 
 extra_manifests = [
   "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
@@ -75,10 +78,10 @@ gitops_addons_basepath = "gitops/"
 gitops_addons_path = "bootstrap/control-plane/addons"
 gitops_addons_revision = "main"
 
-gitops_workload_basepath = ""
+gitops_workload_basepath = "./"
 gitops_workload_path     = ""
 gitops_workload_revision = "main"
-gitops_workload_repo     = "argocd-appsets.git"
+gitops_workload_repo     = "argocd-platform-appsets.git"
 gitops_workload_org      = "git@github.com:tensure"
 
 skip_cluster_wait = true

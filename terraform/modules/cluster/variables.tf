@@ -1,7 +1,7 @@
 variable "nodes" {
   type = map(object({
     name             = string
-    vm_template      = optional(string, "talos-1.7.5-template" )
+    vm_template      = optional(string, null )
     cpu_sockets      = optional(number, 1)
     cpu_cores        = optional(number, 2)
     memory           = optional(number, 1024)
@@ -34,12 +34,12 @@ variable "nodes" {
 ###################################################
 variable "proxmox_image" {
   type    = string
-  default = "local:iso/talos-metal-qemu-1.7.5.iso"
+  default = "local:iso/talos-metal-qemu-1.8.1.iso"
 }
 
 variable "vm_template" {
   type    = string
-  default = "talos-1.7.5-template"
+  default = "talos-1.8.1-template"
 }
 
 variable "ip_base" {

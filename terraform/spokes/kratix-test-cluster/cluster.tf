@@ -2,6 +2,7 @@ module "cluster" {
   source = "../../modules/cluster"
 
   nodes               = var.nodes
+  vm_template         = "talos-1.8.1-template"
   ip_base             = var.ip_base
   cidr                = var.cidr
   gateway             = var.gateway
@@ -22,17 +23,17 @@ module "cloudflare" {
 
   cloudflare_zone_name = var.cloudflare_zone_name
   cloudflare_records = {
-    "media-cluster" = {
-      name    = "media-cluster.integratn.tech"
+    "kratix-cluster" = {
+      name    = "kratix-cluster.integratn.tech"
       type    = "A"
-      content   = "10.0.3.200"
+      content   = "10.0.10.200"
       proxied = false
       ttl     = 1
     }
-    "star.media-cluster" = {
-      name    = "*.media-cluster.integratn.tech"
+    "star.kratix-cluster" = {
+      name    = "*.kratix-cluster.integratn.tech"
       type    = "A"
-      content   = "10.0.3.200"
+      content   = "10.0.10.200"
       proxied = false
       ttl     = 1
     }
