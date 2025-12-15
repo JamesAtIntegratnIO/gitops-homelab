@@ -15,7 +15,7 @@ spec:
               values:
                 addonChart: nginx-gateway-fabric
                 # default chart version; override per-env/cluster via annotations if needed
-                addonChartVersion: 1.4.0
+                addonChartVersion: 2.2.2
                 addonChartRepository: oci://ghcr.io/nginx/charts/nginx-gateway-fabric
               selector:
                 matchExpressions:
@@ -30,13 +30,13 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 1.4.0
+                addonChartVersion: 2.2.2
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 1.4.0
+                addonChartVersion: 2.2.2
   template:
     metadata:
       name: addon-{{.name}}-{{.values.addonChart}}
