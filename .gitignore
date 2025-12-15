@@ -31,3 +31,6 @@ terraform.rc
 **/kubeconfig
 secrets.env
 dockerconfig.json
+
+matchbox/worker.yaml
+matchbox/controlplane.yaml
