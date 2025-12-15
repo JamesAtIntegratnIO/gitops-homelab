@@ -27,7 +27,7 @@ override.tf.json
 terraform.rc
 .terraform.lock.hcl
 
-talosconfig
-kubeconfig
+**/talosconfig
+**/kubeconfig
 secrets.env
 dockerconfig.json

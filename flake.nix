@@ -126,6 +126,7 @@
               yq
               minio-client
               clusterctl
+              crane
 
               # Custom tools
               scaleDownNamespace
