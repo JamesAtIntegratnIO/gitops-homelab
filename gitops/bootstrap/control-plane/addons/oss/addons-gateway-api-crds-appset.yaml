@@ -1,0 +1,57 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: addons-gateway-api-crds
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  goTemplate: true
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  generators:
+    - merge:
+        mergeKeys: [server]
+        generators:
+          - clusters:
+              values:
+                gatewayAPIRevision: v1.2.0
+              selector:
+                matchExpressions:
+                  - key: akuity.io/argo-cd-cluster-name
+                    operator: NotIn
+                    values: [in-cluster]
+                  - key: enable_nginx_gateway_fabric
+                    operator: In
+                    values: ['true']
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: staging
+              values:
+                gatewayAPIRevision: v1.4.0
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: prod
+              values:
+                gatewayAPIRevision: v1.4.0
+  template:
+    metadata:
+      name: addon-{{.name}}-gateway-api-crds
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/kubernetes-sigs/gateway-api.git
+        targetRevision: '{{.values.gatewayAPIRevision}}'
+        path: config/crd/standard
+        directory:
+          recurse: true
+      destination:
+        namespace: kube-system
+        name: '{{.name}}'
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
