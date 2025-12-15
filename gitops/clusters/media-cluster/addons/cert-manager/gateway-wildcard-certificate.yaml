@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: integratn-tech-wildcard
+  namespace: nginx-gateway-fabric
+spec:
+  secretName: integratn-tech-wildcard
+  commonName: integratn.tech
+  dnsNames:
+    - integratn.tech
+    - "*.integratn.tech"
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io

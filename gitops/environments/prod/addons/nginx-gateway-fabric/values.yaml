@@ -20,20 +20,28 @@ gateways:
     namespace: nginx-gateway-fabric
     labels:
       app: nginx-gateway-fabric
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     spec:
       gatewayClassName: nginx
       listeners:
         - name: http
           port: 80
           protocol: HTTP
+          hostname: "*.integratn.tech"
           allowedRoutes:
             namespaces:
               from: All
         - name: https
           port: 443
-          protocol: TLS
+          protocol: HTTPS
+          hostname: "*.integratn.tech"
           tls:
-            mode: Passthrough
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: sonarr-integratn-tech-tls
           allowedRoutes:
             namespaces:
               from: All

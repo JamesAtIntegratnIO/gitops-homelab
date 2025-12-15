@@ -11,14 +11,15 @@ spec:
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
       name: letsencrypt-prod
+    # Use DNS-01 via Cloudflare; HTTP-01 is not feasible because port 80 is not exposed
     solvers:
-    - selector:
-        dnsZones:
-        - 'integratn.tech'
-      dns01:
-        cloudflare:
-          email: james@integratn.io
-          apiKeySecretRef:
-            name: cloudflare-api-key
-            key: CF_API_KEY
+      - selector:
+          dnsZones:
+            - "integratn.tech"
+        dns01:
+          cloudflare:
+            email: james@integratn.io
+            apiKeySecretRef:
+              name: cloudflare-api-key
+              key: CF_API_KEY
 

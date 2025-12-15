@@ -9,11 +9,29 @@ env:
       secretKeyRef:
         name: cloudflare-api-key
         key: CF_API_EMAIL
+
+image:
+  tag: v0.15.1
+
+logLevel: debug
 domainFilters:
   - integratn.tech
 
 provider:
   name: cloudflare
+
+sources:
+  - service
+  - ingress
+  - gateway-httproute
+
+policy: sync
+txtOwnerId: media-cluster
+txtPrefix: media-
+
+extraArgs:
+  - --gateway-namespace=nginx-gateway-fabric
+  - --namespace=media,nginx-gateway-fabric
 
 
 resources:

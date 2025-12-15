@@ -2,3 +2,38 @@ nginx:
   service:
     loadBalancerIP: 10.0.3.205
     externalTrafficPolicy: Local
+
+# Override gateway definition to set an explicit advertised address for external-dns
+gateways:
+  - name: nginx-gateway
+    namespace: nginx-gateway-fabric
+    labels:
+      app: nginx-gateway-fabric
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    spec:
+      gatewayClassName: nginx
+      addresses:
+        - type: IPAddress
+          value: 10.0.3.205
+      listeners:
+        - name: http
+          port: 80
+          protocol: HTTP
+          hostname: "*.integratn.tech"
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https
+          port: 443
+          protocol: HTTPS
+          hostname: "*.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ""
+                kind: Secret
+                name: sonarr-integratn-tech-tls
+          allowedRoutes:
+            namespaces:
+              from: All
