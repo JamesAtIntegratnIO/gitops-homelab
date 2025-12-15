@@ -111,6 +111,7 @@ locals {
       enable_kube_prometheus_stack           = true
       enable_headlamp                        = true
       enable_external_secrets                = true
+      enable_nginx_gateway_fabric            = true
     },
   )
 }
