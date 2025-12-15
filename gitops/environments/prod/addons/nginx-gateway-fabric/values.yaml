@@ -32,7 +32,7 @@ gateways:
               from: All
         - name: https
           port: 443
-          protocol: HTTPS
+          protocol: TLS
           tls:
             mode: Passthrough
           allowedRoutes:
