@@ -1,5 +1,4 @@
 nginx:
   service:
     loadBalancerIP: 10.0.3.205
-    loadBalancerClass: metallb.universe.tf/metallb
     externalTrafficPolicy: Local

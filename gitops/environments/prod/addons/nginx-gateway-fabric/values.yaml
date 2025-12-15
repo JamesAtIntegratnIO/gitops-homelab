@@ -11,8 +11,7 @@ nginx:
   image:
     tag: 2.2.2
   service:
-    # MetalLB: use its loadBalancerClass rather than annotations (not in schema)
-    loadBalancerClass: metallb.universe.tf/metallb
+    # MetalLB uses default class; no explicit class to let controller claim it
     externalTrafficPolicy: Local
 
 # create a Gateway resource for north-south traffic
