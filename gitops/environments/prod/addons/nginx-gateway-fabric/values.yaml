@@ -136,3 +136,16 @@ gateways:
           allowedRoutes:
             namespaces:
               from: All
+        - name: https-argocd
+          port: 443
+          protocol: HTTPS
+          hostname: "argocd.media-cluster.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: argocd-tls
+          allowedRoutes:
+            namespaces:
+              from: All

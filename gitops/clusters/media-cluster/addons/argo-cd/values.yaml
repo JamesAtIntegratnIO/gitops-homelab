@@ -4,5 +4,22 @@ server:
   service:
     annotations:
       metallb.universe.tf/loadBalancerIPs: 10.0.3.201
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: nginx-gateway
+        namespace: nginx-gateway-fabric
+        sectionName: https-argocd
+    hostnames:
+      - argocd.media-cluster.integratn.tech
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+  ingress:
+    enabled: false
+
+
 
 
