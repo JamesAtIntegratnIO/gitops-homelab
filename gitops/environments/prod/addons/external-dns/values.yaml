@@ -30,7 +30,6 @@ txtOwnerId: media-cluster
 txtPrefix: media-
 
 extraArgs:
-  - --gateway-namespace=nginx-gateway-fabric
   - --namespace=media,nginx-gateway-fabric
 
 

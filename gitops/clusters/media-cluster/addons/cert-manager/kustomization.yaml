@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
 - issuer.yaml
-- gateway-wildcard-certificate.yaml
+- certificates.yaml

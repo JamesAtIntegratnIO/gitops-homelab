@@ -32,16 +32,107 @@ gateways:
           allowedRoutes:
             namespaces:
               from: All
-        - name: https
+        - name: https-sonarr
           port: 443
           protocol: HTTPS
-          hostname: "*.integratn.tech"
+          hostname: "sonarr.integratn.tech"
           tls:
             mode: Terminate
             certificateRefs:
               - group: ''
                 kind: Secret
-                name: sonarr-integratn-tech-tls
+                name: sonarr-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-radarr
+          port: 443
+          protocol: HTTPS
+          hostname: "radarr.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: radarr-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-sabnzbd
+          port: 443
+          protocol: HTTPS
+          hostname: "sabnzbd.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: sabnzbd-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-homepage
+          port: 443
+          protocol: HTTPS
+          hostname: "homepage.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: homepage-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-bazarr
+          port: 443
+          protocol: HTTPS
+          hostname: "bazarr.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: bazarr-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-arr-matrix-bot
+          port: 443
+          protocol: HTTPS
+          hostname: "arr-matrix-bot.media-cluster.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: arr-matrix-bot-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-otterwiki
+          port: 443
+          protocol: HTTPS
+          hostname: "wiki.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: otterwiki-tls
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https-paperless
+          port: 443
+          protocol: HTTPS
+          hostname: "paperless.integratn.tech"
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - group: ''
+                kind: Secret
+                name: paperless-tls
           allowedRoutes:
             namespaces:
               from: All
